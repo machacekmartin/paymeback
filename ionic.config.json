@@ -1,0 +1,8 @@
+{
+  "name": "Pay Me Back",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue",
+  "id": "0926baf2"
+}

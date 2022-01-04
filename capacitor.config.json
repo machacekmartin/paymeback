@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "Pay Me Back",
+	"webDir": "dist",
+	"bundledWebRuntime": false
+}

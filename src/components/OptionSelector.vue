@@ -49,17 +49,21 @@ export default {
             },
         },
     },
+    data() {
+        return {
+            hello: "WTF",
+        };
+    },
 };
 </script>
 
 <style scoped>
 ion-select {
-    background-color: var(--ion-color-light); 
+    background-color: var(--ion-color-light);
     border-radius: 0.5rem;
+    transition: background-color .2s;
 }
-@media (prefers-color-scheme: dark) {
-    ion-select:root {
-        background-color: var(--ion-color-primary);
-    }
+ion-select:active {
+    background-color: var(--ion-color-light-shade);
 }
 </style>

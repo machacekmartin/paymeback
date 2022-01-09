@@ -2,9 +2,7 @@
     <ion-page>
         <ion-tabs>
             <ion-router-outlet></ion-router-outlet>
-
-            <ion-tab-bar slot="bottom" style="padding: .75rem .5rem">
-
+            <ion-tab-bar slot="bottom">
                 <ion-tab-button tab="home" href="/tabs/home">
                     <div style="display: flex; align-items: center; padding: .75rem; background-color: rgba(255,255,255,.1); border-radius: .6rem">
                         <ion-icon :icon="triangle" style="width: 25px; height: 25px" />
@@ -25,7 +23,6 @@
                         <ion-label style="margin-left: 12px">Settings</ion-label>
                     </div>
                 </ion-tab-button>
-
             </ion-tab-bar>
         </ion-tabs>
     </ion-page>
@@ -63,3 +60,15 @@ export default {
     },
 };
 </script>
+
+<style scoped>
+ion-tab-bar{
+    padding: 1.5rem .5rem;
+    border-radius: 1rem 1rem 0 0;
+    border: none;
+    box-shadow: 0 -.1rem .4rem rgba(var(--ion-color-light-contrast-rgb), .1)
+}
+ion-tab-bar, ion-tab-button{
+    background-color: var(--ion-color-primary-contrast)
+}
+</style>

@@ -118,11 +118,13 @@ export default {
 <style scoped>
 ion-card {
     width: 100%;
-    border: solid 0.1rem var(--ion-color-light);
     box-shadow: none;
 }
 ion-item{
     --inner-padding-end: 0;
+}
+ion-item:host{
+    background: transparent;
 }
 h1 {
     font-size: 2rem;

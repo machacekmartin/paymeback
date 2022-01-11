@@ -18,7 +18,10 @@
             <ion-grid>
                 <ion-row class="ion-align-items-center">
                     <ion-col class="ion-padding">
-                        <current-balance></current-balance>
+                        <div>
+                            <span>Current Balance</span>
+                            <h1 class="ion-no-margin">1,500€</h1>
+                        </div>
                     </ion-col>
                     <ion-col size="auto" class="ion-padding">
                         <option-selector
@@ -64,7 +67,6 @@
         </ion-content>
         <modal-create-form
             @close="closeModal()"
-            @didDismiss="closeModal()"
             :active="isModalOpen"
         ></modal-create-form>
     </ion-page>
@@ -84,12 +86,11 @@ import {
     IonCol,
     IonIcon,
 } from "@ionic/vue";
-import CurrentBalance from "@/components/CurrentBalance.vue";
-import OptionSelector from "@/components/OptionSelector.vue";
+import OptionSelector from "@/components/form/OptionSelector.vue";
 import DebtorCard from "@/components/DebtorCard.vue";
 import ModalCreateForm from "@/components/ModalCreateForm.vue";
 import { add, cashOutline } from "ionicons/icons";
-import { reactive, ref } from "vue";
+import { reactive, ref, defineComponent } from "vue";
 
 interface Record {
     id: string;
@@ -100,7 +101,7 @@ interface Record {
     currency: string;
 }
 
-export default {
+export default defineComponent({
     components: {
         IonHeader,
         IonToolbar,
@@ -114,7 +115,6 @@ export default {
         IonCol,
         IonIcon,
 
-        CurrentBalance,
         OptionSelector,
         DebtorCard,
         ModalCreateForm,
@@ -132,7 +132,7 @@ export default {
                 currency: "$",
             },
             {
-                id: "25",
+                id: "26",
                 date: "12. 4. 1997",
                 name: "Davydek",
                 description:
@@ -194,7 +194,7 @@ export default {
             openModal,
         };
     },
-};
+});
 </script>
 
 <style scoped>

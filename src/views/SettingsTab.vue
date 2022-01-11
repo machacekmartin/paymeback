@@ -23,8 +23,9 @@ import {
     IonTitle,
     IonContent,
 } from "@ionic/vue";
+import { defineComponent } from "vue";
 
-export default {
+export default defineComponent({
     components: {
         IonHeader,
         IonToolbar,
@@ -32,5 +33,5 @@ export default {
         IonContent,
         IonPage,
     },
-};
+});
 </script>

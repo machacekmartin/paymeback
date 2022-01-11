@@ -40,7 +40,7 @@
     </ion-item-sliding>
 </template>
 
-<script>
+<script lang="ts">
 import {
     IonCard,
     IonIcon,
@@ -57,10 +57,10 @@ import {
     IonItem,
     IonItemOption,
 } from "@ionic/vue";
-
+import { defineComponent } from "vue";
 import { trashBinOutline, createOutline } from "ionicons/icons";
 
-export default {
+export default defineComponent({
     components: {
         IonCard,
         IonIcon,
@@ -103,16 +103,19 @@ export default {
             required: true,
         },
     },
-    setup: (props, { emit }) => {
+    setup(props, context){
         const deleteCard = () => {
-            emit('delete')
+            context.emit('delete')
         }
 
         return {
-            trashBinOutline, createOutline, deleteCard
+            trashBinOutline, 
+            createOutline, 
+            
+            deleteCard
         }
     }
-};
+});
 </script>
 
 <style scoped>

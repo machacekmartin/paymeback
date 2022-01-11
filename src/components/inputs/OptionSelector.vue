@@ -2,13 +2,11 @@
     <ion-select
         :interface="type"
         :placeholder="placeholder"
-        :multiple="multiple"
-        header="hello"
-        class="ion-padding"
+        :value="options[0].toLowerCase()"
     >
         <ion-select-option
             v-for="option in options"
-            :key="option.name"
+            :key="option"
             :value="option.toLowerCase()"
         >
             {{ option }}
@@ -16,7 +14,7 @@
     </ion-select>
 </template>
 
-<script>
+<script lang="ts">
 import { IonSelect, IonSelectOption } from "@ionic/vue";
 
 export default {
@@ -33,37 +31,13 @@ export default {
             type: String,
             required: true,
         },
-        header: {
-            type: String,
-            required: false,
-        },
-        multiple: {
-            type: Boolean,
-            required: false,
-        },
         type: {
             type: String,
             required: false,
-            validator: (value) => {
+            validator: (value: string) => {
                 return ["action-sheet", "selector"].includes(value);
             },
         },
     },
-    data() {
-        return {
-            hello: "WTF",
-        };
-    },
 };
 </script>
-
-<style scoped>
-ion-select {
-    background-color: var(--ion-color-light);
-    border-radius: 0.5rem;
-    transition: background-color .2s;
-}
-ion-select:active {
-    background-color: var(--ion-color-light-shade);
-}
-</style>

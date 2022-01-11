@@ -74,9 +74,9 @@ import {
     IonRouterOutlet,
 } from "@ionic/vue";
 import { ellipse, square, triangle, add } from "ionicons/icons";
+import { defineComponent } from "vue";
 
-
-export default {
+export default defineComponent({
     components: {
         IonLabel,
         IonTabs,
@@ -94,7 +94,7 @@ export default {
             add,
         };
     },
-};
+});
 </script>
 
 <style scoped>

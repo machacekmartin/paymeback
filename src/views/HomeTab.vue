@@ -8,7 +8,6 @@
                 </ion-title>
             </ion-toolbar>
         </ion-header>
-
         <ion-content :fullscreen="true">
             <ion-header collapse="condense">
                 <ion-toolbar>
@@ -25,42 +24,30 @@
                     </ion-col>
                     <ion-col size="auto" class="ion-padding">
                         <option-selector
-                            :options="currencies"
+                            :options="currenciesAsOptions"
                             placeholder="Currency"
                             type="action-sheet"
                         ></option-selector>
                     </ion-col>
                 </ion-row>
-                <transition-group name="debtors">
-                    <ion-row
-                        v-for="(record, index) in debtorRecords"
-                        :key="record.id"
-                        class="debtor"
-                    >
-                        <ion-col
-                            class="
-                                ion-no-padding
-                                ion-no-margin
-                                ion-margin-top
-                                ion-margin-horizontal
-                            "
-                        >
-                            <debtor-card
-                                :date="record.date"
-                                :name="record.name"
-                                :price="record.price"
-                                :description="record.description"
-                                :currency="record.currency"
-                                :id="record.id"
-                                @delete="removeRecord(index)"
-                            >
-                            </debtor-card>
-                        </ion-col>
-                    </ion-row>
-                </transition-group>
             </ion-grid>
+            <transition-group name="records">
+                <ion-row v-for="(record, index) in records" :key="record.id" class="debtor">
+                    <ion-col class="ion-no-margin ion-margin-top ion-margin-horizontal">
+                        <record-card
+                            :date="record.date"
+                            :debtorName="debtors.find(debtor => debtor.id === record.debtorId).name"
+                            :price="record.price"
+                            :description="record.description"
+                            :currency="currencies.find(currency => currency.id === record.currencyId).short"
+                            :id="record.id"
+                            @delete="removeRecord(index)">
+                        </record-card>
+                    </ion-col>
+                </ion-row>
+            </transition-group>
             <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-                <ion-fab-button color="tertiary" @click="openModal()">
+                <ion-fab-button color="primary" @click="openModal()">
                     <ion-icon :icon="add"></ion-icon>
                 </ion-fab-button>
             </ion-fab>
@@ -86,20 +73,14 @@ import {
     IonCol,
     IonIcon,
 } from "@ionic/vue";
-import OptionSelector from "@/components/form/OptionSelector.vue";
-import DebtorCard from "@/components/DebtorCard.vue";
+import OptionSelector from "@/components/inputs/OptionSelector.vue";
+import RecordCard from "@/components/RecordCard.vue";
 import ModalCreateForm from "@/components/ModalCreateForm.vue";
 import { add, cashOutline } from "ionicons/icons";
-import { reactive, ref, defineComponent } from "vue";
+import { ref, defineComponent } from "vue";
 
-interface Record {
-    id: string;
-    date: string;
-    name: string;
-    description: string;
-    price: number;
-    currency: string;
-}
+import { records, currencies, debtors } from '@/store'
+import { convertToOptions } from '@/helpers/convertor'
 
 export default defineComponent({
     components: {
@@ -116,97 +97,54 @@ export default defineComponent({
         IonIcon,
 
         OptionSelector,
-        DebtorCard,
+        RecordCard,
         ModalCreateForm,
     },
 
     setup() {
-        let debtorRecords: Array<Record> = reactive([
-            {
-                id: "25",
-                date: "12. 4. 1997",
-                name: "Davydek",
-                description:
-                    "Lorem wtf omg asdkja awdjkwdng god momno awd dwdwd dmetruig púpúpú idhj",
-                price: 289,
-                currency: "$",
-            },
-            {
-                id: "26",
-                date: "12. 4. 1997",
-                name: "Davydek",
-                description:
-                    "Lorem wtf omg asdkja awdjkwdng god momno awd dwdwd dmetruig púpúpú idhj",
-                price: 289,
-                currency: "$",
-            },
-            {
-                id: "35",
-                date: "12. 4. 1997",
-                name: "Martynko",
-                description:
-                    "Lorem wtf omg asdkja awdjkwdng god momno awd dwdwd dmetruig púpúpú idhj",
-                price: 289,
-                currency: "$",
-            },
-            {
-                id: "45",
-                date: "12. 4. 1997",
-                name: "WTF",
-                description:
-                    "Lorem wtf omg asdkja awdjkwdng god momno awd dwdwd dmetruig púpúpú idhj",
-                price: 289,
-                currency: "$",
-            },
-            {
-                id: "55",
-                date: "12. 4. 1997",
-                name: "Dominyk",
-                description:
-                    "Lorem wtf omg asdkja awdjkwdng god momno awd dwdwd dmetruig púpúpú idhj",
-                price: 289,
-                currency: "$",
-            },
-        ]);
+        const currenciesAsOptions = convertToOptions(currencies, 'id', 'short')
 
-        const removeRecord = (index: number) => {
-            debtorRecords.splice(index, 1);
-            console.log(debtorRecords);
+        const removeRecord = (index: number): void => {
+            records.splice(index, 1);
         };
 
-        let isModalOpen = ref(false);
-        const closeModal = () => {
+        let isModalOpen = ref<boolean>(false);
+        const closeModal = (): void => {
             isModalOpen.value = false;
         };
-        const openModal = () => {
+        const openModal = (): void => {
             isModalOpen.value = true;
         };
 
         return {
-            add,
-            cashOutline,
-            currencies: ["€ EUR", "$ USD", "? CZK"],
-            people: ["Everyone", "Dominik", "Davidek", "Martynko"],
-            debtorRecords,
-            removeRecord,
+            records,
+            debtors,
+            currencies,
+            currenciesAsOptions,
             isModalOpen,
+
+            removeRecord,
             closeModal,
             openModal,
+
+            // icons
+            add,
+            cashOutline,
         };
     },
 });
 </script>
 
 <style scoped>
-.debtor {
+.records {
     transition: opacity 0.2s, transform 0.3s;
 }
-.debtors-enter,
-.debtors-leave-to {
+.records-enter,
+.records-leave-to {
     opacity: 0;
     transform: translate(-150px, 40px);
 }
-.debtors-leave-active {
+.records-leave-active {
     margin-left: 10px;
     position: absolute;
 }

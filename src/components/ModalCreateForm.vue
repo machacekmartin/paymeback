@@ -17,16 +17,16 @@
 
         <ion-content>
             <ion-toolbar>
-                <segment-selector :options="segments" @changed="(value) => activeSegment = value"></segment-selector>
+                <segment-selector :options="formSegments" @changed="(value) => activeSegment = value"></segment-selector>
             </ion-toolbar>
 
             <template v-if="activeSegment == 'existing'">
                 <ion-item>
                     <ion-label position="fixed">Person</ion-label>
-                    <option-selector :options="debtors" placeholder="Select a person.." type="action-sheet"></option-selector>
+                    <option-selector :options="debtorsAsOptions" placeholder="Select a person.." type="action-sheet"></option-selector>
                 </ion-item>
             </template>
-            
+
             <template v-else-if="activeSegment == 'new'">
                 <ion-item>
                     <ion-label position="fixed">Name</ion-label>
@@ -42,7 +42,7 @@
             <ion-item>
                 <ion-label position="fixed">Amount</ion-label>
                 <ion-input :clearInput="true" type="number" inputMode="numeric" placeholder="1490"></ion-input>
-                <option-selector :options="currencies" placeholder="Select a person.." type="action-sheet"></option-selector>
+                <option-selector :options="currenciesAsOptions" placeholder="Select a person.." type="action-sheet"></option-selector>
             </ion-item>
 
             <date-time-input type="date" label="Date" @update="null"></date-time-input>
@@ -68,9 +68,13 @@ import {
 import { defineComponent, ref, onMounted } from "vue";
 import { listOutline, personOutline } from "ionicons/icons";
 
-import DateTimeInput from "@/components/form/DateTimeInput.vue";
-import SegmentSelector from "@/components/form/SegmentSelector.vue";
-import OptionSelector from '@/components/form/OptionSelector.vue'
+import DateTimeInput from "@/components/inputs/DateTimeInput.vue";
+import SegmentSelector from "@/components/inputs/SegmentSelector.vue";
+import OptionSelector from '@/components/inputs/OptionSelector.vue'
+
+import { ISelectorOption } from '@/interfaces'
+import { currencies, debtors, formSegments } from '@/store'
+import { convertToOptions } from '@/helpers/convertor'
 
 export default defineComponent({
     components: {
@@ -97,24 +101,13 @@ export default defineComponent({
         },
     },
     setup(props, context) {
-        const currencies = ["$ USD", "€ EUR", "? CZK"];
-        const debtors = ["Dominik", "Davidek", "Martynko"]
-        const segments = [
-            {
-                text: 'Existing person',
-                value: 'existing',
-                icon: listOutline
-            },
-            {   
-                text: 'New person',
-                value: 'new',
-                icon: personOutline
-            }
-        ]
-        const activeSegment = ref<string>('existing')
+        const currenciesAsOptions: Array<ISelectorOption> = convertToOptions(currencies, 'id', 'short')
+        const debtorsAsOptions: Array<ISelectorOption> = convertToOptions(debtors, 'id', 'name')
+
+        const activeSegment = ref<string>(formSegments[0].value)
         const modalPresenter = ref<HTMLElement | null>();
 
-        const close = () => {
+        const close = (): void => {
             context.emit("close");
         };
 
@@ -123,12 +116,13 @@ export default defineComponent({
         });
 
         return {
-            currencies,
-            debtors,
-            segments,
+            currenciesAsOptions,
+            debtorsAsOptions,
+            formSegments,
+            
             modalPresenter,
-            close,
             activeSegment,
+            close,
 
             // icons
             listOutline, personOutline

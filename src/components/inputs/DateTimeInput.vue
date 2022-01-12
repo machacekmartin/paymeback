@@ -50,7 +50,7 @@ export default defineComponent({
         type: {
             type: String,
             required: true,
-            validator: (value: string) => {
+            validator: (value: string): boolean => {
                 return ['date', 'time'].includes(value)
             }
         },
@@ -62,7 +62,7 @@ export default defineComponent({
     },
 
     setup(props, context) {
-        let iso = ref<string>(new Date().toISOString());
+        const iso = ref<string>(new Date().toISOString());
 
         const displayValue: ComputedRef<string> = computed(() : string => {
             if (props.type == 'date'){
@@ -71,7 +71,7 @@ export default defineComponent({
             return format(parseISO(iso.value), "hh:mm a")
         })
 
-        const changeDate = (isoValue: string) => {
+        const changeDate = (isoValue: string): void => {
             iso.value = isoValue;
             context.emit('update', iso.value)
         };

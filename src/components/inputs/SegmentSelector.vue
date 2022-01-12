@@ -25,7 +25,7 @@ export default defineComponent({
         },
     },
     setup(props, context) {
-        const change = (value: string) => {
+        const change = (value: string): void => {
             context.emit('changed', value)
         }
 

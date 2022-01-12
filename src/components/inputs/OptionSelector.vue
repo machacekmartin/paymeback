@@ -2,22 +2,23 @@
     <ion-select
         :interface="type"
         :placeholder="placeholder"
-        :value="options[0].toLowerCase()"
+        :value="options[0].value"
     >
         <ion-select-option
             v-for="option in options"
-            :key="option"
-            :value="option.toLowerCase()"
+            :key="option.value"
+            :value="option.value"
         >
-            {{ option }}
+            {{ option.text }}
         </ion-select-option>
     </ion-select>
 </template>
 
 <script lang="ts">
 import { IonSelect, IonSelectOption } from "@ionic/vue";
+import { defineComponent } from "vue";
 
-export default {
+export default defineComponent({
     components: {
         IonSelect,
         IonSelectOption,
@@ -34,10 +35,10 @@ export default {
         type: {
             type: String,
             required: false,
-            validator: (value: string) => {
+            validator: (value: string): boolean => {
                 return ["action-sheet", "selector"].includes(value);
             },
         },
     },
-};
+});
 </script>

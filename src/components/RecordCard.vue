@@ -15,17 +15,16 @@
                         <ion-row class="ion-align-items-end">
                             <ion-col>
                                 <ion-card-subtitle>
-                                    {{ date }}
+                                    <span>{{ date }}</span>
                                 </ion-card-subtitle>
                                 <ion-card-title>
-                                    <h2 class="ion-no-margin">{{ name }}</h2>
+                                    <h2 class="ion-no-margin">{{ debtorName }}</h2>
                                 </ion-card-title>
                             </ion-col>
                             <ion-col size="auto">
                                 <ion-text color="danger">
                                     <h1 class="ion-no-margin">
-                                        <strong>{{ price }}</strong
-                                        >{{ currency }}
+                                        <strong>{{ price }}</strong> {{ currency }}
                                     </h1>
                                 </ion-text>
                             </ion-col>
@@ -79,7 +78,7 @@ export default defineComponent({
     },
     props: {
         id: {
-            type: String,
+            type: Number,
             required: true
         },
         date: {
@@ -94,7 +93,7 @@ export default defineComponent({
             type: String,
             required: true,
         },
-        name: {
+        debtorName: {
             type: String,
             required: true,
         },
@@ -104,7 +103,7 @@ export default defineComponent({
         },
     },
     setup(props, context){
-        const deleteCard = () => {
+        const deleteCard = (): void => {
             context.emit('delete')
         }
 

@@ -1,6 +1,16 @@
 import { ICurrency, IRecord, IDebtor, ISegment } from '@/interfaces/index'
 import { listOutline, personOutline } from "ionicons/icons";
 
+
+
+
+
+
+
+
+
+
+
 export const currencies: Array<ICurrency> = [
     {
         id: 0,
@@ -41,6 +51,7 @@ export const records: Array<IRecord> = [
     {
         id: 0,
         date: "12. 4. 1997",
+        time: '12:12',
         debtorId: 0,
         description:
             "Lorem wtf omg asdkja awdjkwdng god momno awd dwdwd dmetruig púpúpú idhj",
@@ -50,6 +61,7 @@ export const records: Array<IRecord> = [
     {
         id: 1,
         date: "12. 4. 1997",
+        time: '12:12',
         debtorId: 1,
         description:
             "Lorem wtf omg asdkja awdjkwdng god momno awd dwdwd dmetruig púpúpú idhj",
@@ -59,6 +71,7 @@ export const records: Array<IRecord> = [
     {
         id: 2,
         date: "12. 4. 1997",
+        time: '12:12',
         debtorId: 0,
         description:
             "Lorem wtf omg asdkja awdjkwdng god momno awd dwdwd dmetruig púpúpú idhj",
@@ -68,6 +81,7 @@ export const records: Array<IRecord> = [
     {
         id: 3,
         date: "12. 4. 1997",
+        time: '12:12',
         debtorId: 2,
         description:
             "Lorem wtf omg asdkja awdjkwdng god momno awd dwdwd dmetruig púpúpú idhj",
@@ -77,6 +91,7 @@ export const records: Array<IRecord> = [
     {
         id: 4,
         date: "12. 4. 1997",
+        time: '12:12',
         debtorId: 1,
         description:
             "Lorem wtf omg asdkja awdjkwdng god momno awd dwdwd dmetruig púpúpú idhj",

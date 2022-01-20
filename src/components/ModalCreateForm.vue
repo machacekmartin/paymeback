@@ -11,7 +11,7 @@
                 <ion-buttons slot="start">
                     <ion-button @click="close()">Close</ion-button>
                 </ion-buttons>
-                <ion-button slot="end" @click="close()">Add</ion-button>
+                <ion-button slot="end" @click="submit()">Add</ion-button>
             </ion-toolbar>
         </ion-header>
 
@@ -23,30 +23,30 @@
             <template v-if="activeSegment == 'existing'">
                 <ion-item>
                     <ion-label position="fixed">Person</ion-label>
-                    <option-selector :options="debtorsAsOptions" placeholder="Select a person.." type="action-sheet"></option-selector>
+                    <option-selector :options="debtorsAsOptions" placeholder="Select a person.." type="action-sheet" v-model="formData.debtorId"></option-selector>
                 </ion-item>
             </template>
 
             <template v-else-if="activeSegment == 'new'">
                 <ion-item>
                     <ion-label position="fixed">Name</ion-label>
-                    <ion-input placeholder="Martin Macháček" type="text"></ion-input>
+                    <ion-input placeholder="Martin Macháček" type="text" v-model="debtorName"></ion-input>
                 </ion-item>
             </template>
 
             <ion-item>
                 <ion-label position="fixed">Note</ion-label>
-                <ion-input placeholder="IDK.. type anything here" type="text"></ion-input>
+                <ion-input placeholder="IDK.. type anything here" type="text" v-model="formData.description"></ion-input>
             </ion-item>
 
             <ion-item>
                 <ion-label position="fixed">Amount</ion-label>
-                <ion-input :clearInput="true" type="number" inputMode="numeric" placeholder="1490"></ion-input>
-                <option-selector :options="currenciesAsOptions" placeholder="Select a person.." type="action-sheet"></option-selector>
+                <ion-input :clearInput="true" type="number" inputMode="numeric" :placeholder="1490" v-model.number="formData.price"></ion-input>
+                <option-selector :options="currenciesAsOptions" placeholder="Select a person.." type="action-sheet"  v-model="formData.currencyId"></option-selector>
             </ion-item>
 
-            <date-time-input type="date" label="Date" @update="null"></date-time-input>
-            <date-time-input type="time" label="Time" @update="null"></date-time-input>
+            <date-time-input type="date" label="Date" @update="(value) => formData.date = value" :value="formData.date"></date-time-input>
+            <date-time-input type="time" label="Time" @update="(value) => formData.time = value" :value="formData.time"></date-time-input>
         </ion-content>
     </ion-modal>
 </template>
@@ -65,15 +65,16 @@ import {
     IonInput,
 
 } from "@ionic/vue";
-import { defineComponent, ref, onMounted } from "vue";
+import { defineComponent, ref, onMounted, reactive } from "vue";
 import { listOutline, personOutline } from "ionicons/icons";
 
 import DateTimeInput from "@/components/inputs/DateTimeInput.vue";
 import SegmentSelector from "@/components/inputs/SegmentSelector.vue";
 import OptionSelector from '@/components/inputs/OptionSelector.vue'
 
-import { ISelectorOption } from '@/interfaces'
-import { currencies, debtors, formSegments } from '@/store'
+import { ISelectorOption, IRecord, IDebtor } from '@/interfaces'
+import { Record, Debtor } from '@/classes'
+import { currencies, debtors, formSegments, records } from '@/store'
 import { convertToOptions } from '@/helpers/convertor'
 
 export default defineComponent({
@@ -101,15 +102,32 @@ export default defineComponent({
         },
     },
     setup(props, context) {
+        const modalPresenter = ref<HTMLElement | null>();
+        const activeSegment = ref<string>(formSegments[0].value)
+
         const currenciesAsOptions: Array<ISelectorOption> = convertToOptions(currencies, 'id', 'short')
         const debtorsAsOptions: Array<ISelectorOption> = convertToOptions(debtors, 'id', 'name')
 
-        const activeSegment = ref<string>(formSegments[0].value)
-        const modalPresenter = ref<HTMLElement | null>();
 
+        const debtorName = ref<string>('')
+        const formData = reactive<IRecord>(new Record)
+        
         const close = (): void => {
             context.emit("close");
         };
+
+        const submit = (): void => {
+            if (activeSegment.value == 'new'){
+                const debtor: IDebtor = new Debtor(debtorName.value);
+                // INSERT DEBTOR TO VUEX AND THEN -- v
+                formData.debtorId = debtor.id
+            }
+            
+            /* INSERT RECORD TO VUEX */ records.push({ ...formData } as IRecord);
+            console.log(records)
+
+            context.emit("close")
+        }
 
         onMounted(() => {
             modalPresenter.value = document.getElementById("router");
@@ -122,7 +140,10 @@ export default defineComponent({
             
             modalPresenter,
             activeSegment,
+            debtorName,
+            formData,
             close,
+            submit,
 
             // icons
             listOutline, personOutline

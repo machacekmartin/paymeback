@@ -1,6 +1,7 @@
 export interface IRecord{
     id: number;
     date: string;
+    time: string;
     debtorId: number;
     description: string;
     price: number;

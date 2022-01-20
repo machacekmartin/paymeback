@@ -14,7 +14,7 @@
                         size="cover"
                         hourCycle="hourCycle"
                         :presentation="type"
-                        :value="iso"
+                        :value="value"
                         @ionChange="(event) => changeDate(event.detail.value)"
                     ></ion-datetime>
                 </ion-item>
@@ -33,7 +33,7 @@ import {
     IonText,
     IonList,
 } from "@ionic/vue";
-import { defineComponent, ComputedRef, ref, computed } from "vue";
+import { defineComponent, ComputedRef, computed } from "vue";
 import { format, parseISO } from "date-fns";
 
 export default defineComponent({
@@ -58,27 +58,28 @@ export default defineComponent({
             type: String,
             required: false,
             default: 'Date'
+        },
+        value: {
+            type: String,
+            required: true
         }
     },
 
     setup(props, context) {
-        const iso = ref<string>(new Date().toISOString());
 
         const displayValue: ComputedRef<string> = computed(() : string => {
             if (props.type == 'date'){
-                return format(parseISO(iso.value), "dd. MM. yyyy")
+                return format(parseISO(props.value), "dd. MM. yyyy")
             }
-            return format(parseISO(iso.value), "hh:mm a")
+            return format(parseISO(props.value), "hh:mm a")
         })
 
         const changeDate = (isoValue: string): void => {
-            iso.value = isoValue;
-            context.emit('update', iso.value)
+            context.emit('update', isoValue)
         };
 
         return {
             changeDate,
-            iso,
             displayValue
         };
     },

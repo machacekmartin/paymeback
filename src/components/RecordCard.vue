@@ -1,9 +1,6 @@
 <template>
     <ion-item-sliding>
         <ion-item-options>
-            <ion-item-option color="dark" class="ion-padding-horizontal">
-                <ion-icon :icon="createOutline" size="large" class="ion-padding-horizontal"></ion-icon>
-            </ion-item-option>
             <ion-item-option color="danger" @click="deleteCard">
                 <ion-icon :icon="trashBinOutline" size="large" class="ion-padding-horizontal"></ion-icon>
             </ion-item-option>
@@ -15,7 +12,8 @@
                         <ion-row class="ion-align-items-end">
                             <ion-col>
                                 <ion-card-subtitle>
-                                    <span>{{ date }}</span>
+                                    <span>{{ formattedDate }}</span>
+                                    <span>{{ formattedTime }}</span>
                                 </ion-card-subtitle>
                                 <ion-card-title>
                                     <h2 class="ion-no-margin">{{ debtorName }}</h2>
@@ -24,7 +22,10 @@
                             <ion-col size="auto">
                                 <ion-text color="danger">
                                     <h1 class="ion-no-margin">
-                                        <strong>{{ price }}</strong> {{ currency }}
+                                        <strong>
+                                            {{ price }} 
+                                            <small>{{ currency }}</small> 
+                                        </strong>
                                     </h1>
                                 </ion-text>
                             </ion-col>
@@ -56,8 +57,9 @@ import {
     IonItem,
     IonItemOption,
 } from "@ionic/vue";
-import { defineComponent } from "vue";
+import { defineComponent, computed } from "vue";
 import { trashBinOutline, createOutline } from "ionicons/icons";
+import { format, parseISO } from "date-fns";
 
 export default defineComponent({
     components: {
@@ -77,13 +79,13 @@ export default defineComponent({
         IonItemOption,
     },
     props: {
-        id: {
-            type: Number,
-            required: true
-        },
         date: {
             type: String,
             required: true,
+        },
+        time: {
+            type: String,
+            required: true
         },
         price: {
             type: Number,
@@ -107,9 +109,18 @@ export default defineComponent({
             context.emit('delete')
         }
 
+        const formattedDate = computed(() => {
+            return format(parseISO(props.date), "dd. MM. yyyy")
+        })
+        const formattedTime = computed(() => {
+            return format(parseISO(props.time), "h:mm a")
+        })
+
         return {
             trashBinOutline, 
             createOutline, 
+            formattedDate,
+            formattedTime,
             
             deleteCard
         }
@@ -128,8 +139,15 @@ ion-item{
 ion-item:host{
     background: transparent;
 }
+ion-card-subtitle > span:first-child{
+    padding-right: .5rem;
+    font-weight: 500;
+}
+ion-card-subtitle > span:last-child{
+    font-weight: 300;
+}
 h1 {
-    font-size: 2rem;
+    font-size: 1.75rem;
     font-style: italic;
 }
 

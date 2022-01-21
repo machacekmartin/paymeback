@@ -1,5 +1,5 @@
 <template>
-    <ion-segment :value="options[0].value" :swipeGesture="true" @ionChange="(event) => change(event.target.value)">
+    <ion-segment :swipeGesture="true">
         <ion-segment-button :value="option.value" v-for="option in options" :key="option">
             <ion-text>{{ option.text }}</ion-text>
             <ion-icon :icon="option.icon"></ion-icon>
@@ -8,8 +8,11 @@
 </template>
 
 <script lang="ts">
+
 import { IonSegment, IonSegmentButton, IonIcon, IonText } from "@ionic/vue";
 import { defineComponent } from "vue";
+import { TSegment } from '@/types'
+
 
 export default defineComponent({
     components: {
@@ -20,17 +23,13 @@ export default defineComponent({
     },
     props: {
         options: {
-            type: Array,
+            type: Object as () => TSegment[],
             required: true,
         },
     },
-    setup(props, context) {
-        const change = (value: string): void => {
-            context.emit('changed', value)
-        }
-
+    setup() {
         return {
-            change
+            
         }
     }
 });

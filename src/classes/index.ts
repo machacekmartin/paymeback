@@ -1,35 +1,34 @@
-import { IDebtor, IRecord } from '@/interfaces/index'
+import { TDebtor, TRecord } from '@/types/index'
+import { useStore } from '@/store'
 
-// IMPORT DEBTORS VUEX & CURRENCIES VUEX
+export class Record implements TRecord {
 
-export class Record implements IRecord{
-
-    id: number;
-    debtorId: number;
+    id: string;
+    debtorId: string;
     description: string;
-    price: number;
+    price: number | undefined;
     currencyId: number;
     date: string;
     time: string;
 
-    constructor(){
-        this.id = new Date().getTime() + Math.floor(Math.random() * 100000);
-        this.debtorId = 0 // Vuex.debtors[0].value // debtorsAsOptions[0].value as number;
+    constructor() {
+        this.id = 'id' + (new Date()).getTime();
+        this.debtorId = useStore().getters.debtors[0]?.id;
         this.description = '';
-        this.price = 1490;
+        this.price = undefined;
         this.currencyId = 0 // Vuex.currencies[0].value // currenciesAsOptions[0].value as number;
         this.date = new Date().toISOString();
         this.time = new Date().toISOString();
     }
 }
 
-export class Debtor implements IDebtor{
-
-    id: number;
+export class Debtor implements TDebtor {
+    
+    id: string;
     name: string;
 
-    constructor(name: string){
-        this.id = new Date().getTime() + Math.floor(Math.random() * 100000);
+    constructor(name: string) {
+        this.id = 'id-' + (new Date()).getTime();
         this.name = name
     }
 }

@@ -2,7 +2,6 @@
     <ion-select
         :interface="type"
         :placeholder="placeholder"
-        :value="options[0].value"
     >
         <ion-select-option
             v-for="option in options"

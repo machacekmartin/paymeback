@@ -6,51 +6,33 @@
                     <ion-icon :icon="cashOutline" style="color: red"></ion-icon>
                     You Owe Me
                 </ion-title>
+                <ion-button class="ion-margin-horizontal md-only" slot="end" color="tertiary" @click="openModal()">
+                    <ion-icon :icon="add"></ion-icon>
+                </ion-button>
             </ion-toolbar>
         </ion-header>
-        <ion-content :fullscreen="true">
-            <ion-header collapse="condense">
+        <ion-content>
+            <ion-header collapse="condense" class="ion-margin-bottom">
                 <ion-toolbar>
-                    <ion-title size="large">You Owe Me</ion-title>
+                    <ion-title slot="start" size="large">You Owe Me</ion-title>
+                    <ion-button slot="end" color="tertiary" @click="openModal()">
+                        <ion-icon :icon="add"></ion-icon>
+                    </ion-button>
                 </ion-toolbar>
             </ion-header>
-            <ion-grid>
-                <ion-row class="ion-align-items-center">
-                    <ion-col class="ion-padding">
-                        <div>
-                            <span>Current Balance</span>
-                            <h1 class="ion-no-margin">1,500€</h1>
-                        </div>
-                    </ion-col>
-                    <ion-col size="auto" class="ion-padding">
-                        <option-selector
-                            :options="currenciesAsOptions"
-                            placeholder="Currency"
-                            type="action-sheet"
-                        ></option-selector>
-                    </ion-col>
-                </ion-row>
-            </ion-grid>
-            <transition-group name="records">
-                <ion-row v-for="(record, index) in records" :key="record.id" class="debtor">
-                    <ion-col class="ion-no-margin ion-margin-top ion-margin-horizontal">
-                        <record-card
-                            :date="record.date"
-                            :debtorName="debtors.find(debtor => debtor.id === record.debtorId).name"
-                            :price="record.price"
-                            :description="record.description"
-                            :currency="currencies.find(currency => currency.id === record.currencyId).short"
-                            :id="record.id"
-                            @delete="removeRecord(index)">
-                        </record-card>
-                    </ion-col>
-                </ion-row>
+            <transition-group name="record">
+                <record-card
+                    class="record"
+                    v-for="record in records"  :key="record.id"
+                    :date="record.date"
+                    :time="record.time"
+                    :debtorName="debtors.find(debtor => debtor.id === record.debtorId).name"
+                    :price="record.price"
+                    :description="record.description"
+                    :currency="currencies.find(currency => currency.id === record.currencyId).short"
+                    @delete="removeRecord(record.id)">
+                </record-card>     
             </transition-group>
-            <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-                <ion-fab-button color="primary" @click="openModal()">
-                    <ion-icon :icon="add"></ion-icon>
-                </ion-fab-button>
-            </ion-fab>
         </ion-content>
         <modal-create-form
             @close="closeModal()"
@@ -66,21 +48,19 @@ import {
     IonToolbar,
     IonTitle,
     IonContent,
-    IonFab,
-    IonFabButton,
-    IonGrid,
-    IonRow,
-    IonCol,
+    IonButton,
     IonIcon,
 } from "@ionic/vue";
-import OptionSelector from "@/components/inputs/OptionSelector.vue";
+
 import RecordCard from "@/components/RecordCard.vue";
 import ModalCreateForm from "@/components/ModalCreateForm.vue";
 import { add, cashOutline } from "ionicons/icons";
-import { ref, defineComponent } from "vue";
-
-import { records, currencies, debtors } from '@/store'
+import { ref, defineComponent, computed } from "vue";
+import { useStore } from '@/store';
+import { RecordsActionTypes } from '@/store/records/actions'
+import { currencies } from '@/store'
 import { convertToOptions } from '@/helpers/convertor'
+
 
 export default defineComponent({
     components: {
@@ -89,23 +69,20 @@ export default defineComponent({
         IonTitle,
         IonContent,
         IonPage,
-        IonFab,
-        IonFabButton,
-        IonGrid,
-        IonRow,
-        IonCol,
         IonIcon,
-
-        OptionSelector,
+        IonButton,
+        
         RecordCard,
         ModalCreateForm,
     },
 
     setup() {
+        const store = useStore()
         const currenciesAsOptions = convertToOptions(currencies, 'id', 'short')
 
-        const removeRecord = (index: number): void => {
-            records.splice(index, 1);
+        const removeRecord = (id: string): void => {
+            store.dispatch(RecordsActionTypes.REMOVE_RECORD, id)
+            
         };
 
         let isModalOpen = ref<boolean>(false);
@@ -114,11 +91,10 @@ export default defineComponent({
         };
         const openModal = (): void => {
             isModalOpen.value = true;
+            console.log()
         };
 
         return {
-            records,
-            debtors,
             currencies,
             currenciesAsOptions,
             isModalOpen,
@@ -130,22 +106,32 @@ export default defineComponent({
             // icons
             add,
             cashOutline,
+
+            records: computed(() => store.getters.records),
+            debtors: computed(() => store.getters.debtors),
         };
     },
+
 });
 </script>
 
 <style scoped>
-.records {
-    transition: opacity 0.2s, transform 0.3s;
+.record {
+    transition: opacity .2s, transform .3s;
+    margin: .5rem 0;
 }
-.records-enter,
-.records-leave-to {
+.record-enter-from,
+.record-leave-to {
     opacity: 0;
     transform: translate(-150px, 40px);
 }
-.records-leave-active {
-    margin-left: 10px;
+.record-leave-active {
+    margin-left: -10px;
     position: absolute;
 }
+ion-toolbar.ios .md-only{
+    display: none;
+}
+
+
 </style>

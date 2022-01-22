@@ -1,43 +1,47 @@
 <template>
-    <ion-item-sliding>
-        <ion-item-options>
-            <ion-item-option color="danger" @click="deleteCard()">
-                <ion-icon :icon="trashBinOutline" size="large" class="ion-padding-horizontal"></ion-icon>
-            </ion-item-option>
-        </ion-item-options>
-        <ion-item lines="none" class="ion-no-margin ion-no-padding">
-            <ion-card color="light" class="ion-no-margin ion-no-padding" :button="true">
-                <ion-card-header>
-                    <ion-grid class="ion-no-padding">
-                        <ion-row class="ion-align-items-end">
-                            <ion-col>
-                                <ion-card-subtitle>
-                                    <span>{{ formattedDate }}</span>
-                                    <span>{{ formattedTime }}</span>
-                                </ion-card-subtitle>
-                                <ion-card-title>
-                                    <h2 class="ion-no-margin">{{ debtorName }}</h2>
-                                </ion-card-title>
-                            </ion-col>
-                            <ion-col size="auto">
-                                <ion-text color="danger">
-                                    <h1 class="ion-no-margin">
-                                        <strong>
-                                            {{ price }} 
-                                            <small>{{ currency }}</small> 
-                                        </strong>
-                                    </h1>
-                                </ion-text>
-                            </ion-col>
-                        </ion-row>
-                    </ion-grid>
-                </ion-card-header>
-                <ion-card-content>
-                    <p>{{ description }}</p>
-                </ion-card-content>
-            </ion-card>
-        </ion-item>
-    </ion-item-sliding>
+    <div>
+
+    
+        <ion-item-sliding>
+            <ion-item-options>
+                <ion-item-option color="danger" @click="deleteCard()">
+                    <ion-icon :icon="trashBinOutline" size="large" class="ion-padding-horizontal"></ion-icon>
+                </ion-item-option>
+            </ion-item-options>
+            <ion-item lines="none" class="ion-no-margin ion-no-padding">
+                <ion-card color="light" class="ion-no-margin ion-no-padding" :button="true">
+                    <ion-card-header>
+                        <ion-grid class="ion-no-padding">
+                            <ion-row class="ion-align-items-end">
+                                <ion-col>
+                                    <ion-card-subtitle>
+                                        <span>{{ formattedDate }}</span>
+                                        <span>{{ formattedTime }}</span>
+                                    </ion-card-subtitle>
+                                    <ion-card-title>
+                                        <h2 class="ion-no-margin">{{ debtorName }}</h2>
+                                    </ion-card-title>
+                                </ion-col>
+                                <ion-col size="auto">
+                                    <ion-text color="danger">
+                                        <h1 class="ion-no-margin">
+                                            <strong>
+                                                {{ price }} 
+                                                <small>{{ currency }}</small> 
+                                            </strong>
+                                        </h1>
+                                    </ion-text>
+                                </ion-col>
+                            </ion-row>
+                        </ion-grid>
+                    </ion-card-header>
+                    <ion-card-content>
+                        <p>{{ description }}</p>
+                    </ion-card-content>
+                </ion-card>
+            </ion-item>
+        </ion-item-sliding>
+    </div>
 </template>
 
 <script lang="ts">
@@ -121,6 +125,8 @@ ion-card {
 }
 ion-item{
     --inner-padding-end: 0;
+    background: transparent;
+    border-radius: .5rem;
 }
 ion-item:host{
     background: transparent;
@@ -131,6 +137,10 @@ ion-card-subtitle > span:first-child{
 }
 ion-card-subtitle > span:last-child{
     font-weight: 300;
+}
+
+ion-item-option{
+    border-radius: .5rem;
 }
 h1 {
     font-size: 1.75rem;

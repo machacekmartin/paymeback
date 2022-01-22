@@ -7,11 +7,13 @@
     >
         <ion-header :translucent="true" :collapse="true">
             <ion-toolbar>
-                <ion-title class="ion-text-center">Add new debtor</ion-title>
+                <ion-title class="ion-text-center">Add new record</ion-title>
                 <ion-buttons slot="start">
                     <ion-button @click="close()">Close</ion-button>
                 </ion-buttons>
-                <ion-button type="submit" slot="end" @click="submit()">Add</ion-button>
+                <ion-button type="submit" slot="end" color="tertiary" size="default" @click="submit()">
+                    <ion-icon :icon="checkmarkOutline"></ion-icon>
+                </ion-button>
             </ion-toolbar>
         </ion-header>
 
@@ -66,7 +68,7 @@ import { TSelectorOption, TRecord, TDebtor, TSegment } from '@/types'
 import { Record, Debtor } from '@/classes'
 import { convertToOptions } from '@/helpers/convertor'
 import { useEmitter } from '@/emitter'
-import { listOutline, personOutline } from 'ionicons/icons';
+import { listOutline, personOutline, checkmarkOutline } from 'ionicons/icons';
 
 export default defineComponent({
     components: {
@@ -176,7 +178,7 @@ export default defineComponent({
             close,         
             
             //icons
-            listOutline, personOutline,
+            listOutline, personOutline, checkmarkOutline
         };
     },
     

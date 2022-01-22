@@ -1,15 +1,20 @@
 <template>
     <ion-page>
-        <ion-header collapse="fade">
+        <ion-header collapse="fade" :translucent="true" mode="ios">
             <ion-toolbar>
-                <ion-title>You Owe Me</ion-title>
+                <ion-title slot="start">You Owe Me</ion-title>
+                <ion-buttons slot="end" :collapse="true">
+                    <ion-button @click="openModal()">
+                        <ion-icon :icon="add"></ion-icon>
+                    </ion-button>
+                </ion-buttons>
             </ion-toolbar>
         </ion-header>
         <ion-content>
             <ion-header collapse="condense">
                 <ion-toolbar>
                     <ion-title slot="start" size="large">You Owe Me</ion-title>
-                    <ion-button slot="end" color="tertiary" @click="openModal()">
+                    <ion-button slot="end" color="light" @click="openModal()">
                         <ion-icon :icon="add"></ion-icon>
                     </ion-button>
                 </ion-toolbar>
@@ -34,7 +39,7 @@
 
 <script lang="ts">
 import { defineComponent, computed } from "vue";
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon } from "@ionic/vue";
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon, IonButtons } from "@ionic/vue";
 
 import RecordCard from "@/components/RecordCard.vue";
 
@@ -53,6 +58,7 @@ export default defineComponent({
         IonPage,
         IonIcon,
         IonButton,
+        IonButtons,
         RecordCard,
     },
 
@@ -91,8 +97,9 @@ export default defineComponent({
 
 <style scoped>
 .record {
+    width: 100%;
+    padding: .5rem .5rem 0;
     transition: opacity .2s, transform .3s;
-    margin: .5rem 0;
 }
 .record-enter-from,
 .record-leave-to {

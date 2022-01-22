@@ -1,5 +1,7 @@
-import { TDebtor, TRecord } from '@/types/index'
+import { TDebtor, TRecord, TCurrency } from '@/types/index'
 import { useStore } from '@/store'
+
+const store = useStore()
 
 export class Record implements TRecord {
 
@@ -7,16 +9,16 @@ export class Record implements TRecord {
     debtorId: string;
     description: string;
     price: number | undefined;
-    currencyId: number;
+    currency: TCurrency;
     date: string;
     time: string;
 
     constructor() {
         this.id = 'id' + (new Date()).getTime();
-        this.debtorId = useStore().getters.debtors[0]?.id;
+        this.debtorId = store.getters.debtors[0]?.id;
         this.description = '';
         this.price = undefined;
-        this.currencyId = 0 // Vuex.currencies[0].value // currenciesAsOptions[0].value as number;
+        this.currency = store.getters.defaultCurrency;
         this.date = new Date().toISOString();
         this.time = new Date().toISOString();
     }
@@ -32,4 +34,3 @@ export class Debtor implements TDebtor {
         this.name = name
     }
 }
-

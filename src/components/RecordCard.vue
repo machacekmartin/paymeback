@@ -1,12 +1,12 @@
 <template>
     <ion-item-sliding>
         <ion-item-options>
-            <ion-item-option color="danger" @click="deleteCard">
+            <ion-item-option color="danger" @click="deleteCard()">
                 <ion-icon :icon="trashBinOutline" size="large" class="ion-padding-horizontal"></ion-icon>
             </ion-item-option>
         </ion-item-options>
         <ion-item lines="none" class="ion-no-margin ion-no-padding">
-            <ion-card color="light" class="ion-no-margin ion-no-padding">
+            <ion-card color="light" class="ion-no-margin ion-no-padding" :button="true">
                 <ion-card-header>
                     <ion-grid class="ion-no-padding">
                         <ion-row class="ion-align-items-end">
@@ -41,25 +41,11 @@
 </template>
 
 <script lang="ts">
-import {
-    IonCard,
-    IonIcon,
-    IonCardHeader,
-    IonCardSubtitle,
-    IonCardTitle,
-    IonCardContent,
-    IonGrid,
-    IonRow,
-    IonCol,
-    IonText,
-    IonItemSliding,
-    IonItemOptions,
-    IonItem,
-    IonItemOption,
-} from "@ionic/vue";
 import { defineComponent, computed } from "vue";
-import { trashBinOutline, createOutline } from "ionicons/icons";
+import { IonCard, IonIcon, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent, IonGrid, IonRow, IonCol, IonText, IonItemSliding, IonItemOptions, IonItem, IonItemOption } from "@ionic/vue";
+
 import { format, parseISO } from "date-fns";
+import { trashBinOutline, createOutline } from "ionicons/icons";
 
 export default defineComponent({
     components: {

@@ -5,7 +5,7 @@ export type TRecord = {
     debtorId: string;
     description: string;
     price: number | undefined;
-    currencyId: number;
+    currency: TCurrency;
 }
 
 export type TDebtor = {
@@ -13,12 +13,7 @@ export type TDebtor = {
     name: string
 }
 
-export type TCurrency = {
-    id: number,
-    name: string,
-    short: string,
-    symbol: string
-}
+export type TCurrency = 'CZK' | 'EUR' | 'USD' | 'JPN' 
 
 export type TSelectorOption = {
     text: string,

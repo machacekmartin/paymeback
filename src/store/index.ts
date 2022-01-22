@@ -1,19 +1,24 @@
 import { createStore } from 'vuex'
 import { TRecord, TDebtor } from '@/types'
-import { records as recordsStore, RecordsStore } from './records'
-import { debtors as debtorsStore, DebtorsStore } from './debtors'
+import { records, RecordsStore } from './records'
+import { debtors, DebtorsStore } from './debtors'
+import { currencies, CurrenciesStore } from './currencies'
 
 export type RootState = {
     records: TRecord[],
-    debtors: TDebtor[]
+    debtors: TDebtor[],
+    currencies: TCurrency[]
 }
 
-export type Store = RecordsStore <Pick<RootState, 'records'>> & DebtorsStore <Pick<RootState, 'debtors'>>; 
+export type Store = RecordsStore <Pick<RootState, 'records'>> 
+                    & DebtorsStore <Pick<RootState, 'debtors'>> 
+                    & CurrenciesStore <Pick<RootState, 'currencies'>>; 
 
 export const store = createStore({
     modules: {
-        recordsStore,
-        debtorsStore
+        records,
+        debtors,
+        currencies
     }
 })
 export function useStore(): Store{
@@ -22,24 +27,4 @@ export function useStore(): Store{
 
 import { TCurrency } from '@/types/index'
 
-export const currencies: Array<TCurrency> = [
-    {
-        id: 0,
-        name: 'US Dollar',
-        short: 'USD',
-        symbol: '$'
-    },
-    {
-        id: 1,
-        name: 'Euro',
-        short: 'EUR',
-        symbol: '€'
-    },
-    {
-        id: 2,
-        name: 'Czech Crown',
-        short: 'CZK',
-        symbol: '?'
-    },
-]
 

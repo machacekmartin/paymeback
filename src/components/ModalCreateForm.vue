@@ -42,7 +42,7 @@
             <ion-item :class="{ 'error': errors.includes('price') }">
                 <ion-label position="fixed">Amount</ion-label>
                 <ion-input  type="number" inputMode="numeric" :placeholder="389" v-model.number="formData.price" :required="true"></ion-input>
-                <option-selector :options="currenciesAsOptions" placeholder="Select a person.." type="action-sheet"  v-model="formData.currencyId"></option-selector>
+                <option-selector :options="currenciesAsOptions" placeholder="Currency" type="action-sheet"  v-model="formData.currency"></option-selector>
             </ion-item>
 
             <date-time-input type="date" label="Date" @update="(value) => formData.date = value" :value="formData.date"></date-time-input>
@@ -52,32 +52,20 @@
 </template>
 
 <script lang="ts">
-import {
-    IonTitle,
-    IonToolbar,
-    IonButtons,
-    IonButton,
-    IonHeader,
-    IonContent,
-    IonModal,
-    IonItem,
-    IonLabel,
-    IonInput,
-
-} from "@ionic/vue";
 import { defineComponent, ref, onMounted, reactive, watch, computed } from "vue";
+import { IonTitle, IonToolbar, IonButtons, IonButton, IonHeader, IonContent, IonModal, IonItem, IonLabel, IonInput } from "@ionic/vue";
 import DateTimeInput from "@/components/inputs/DateTimeInput.vue";
 import SegmentSelector from "@/components/inputs/SegmentSelector.vue";
 import OptionSelector from '@/components/inputs/OptionSelector.vue'
 
-import { useStore, currencies } from '@/store'
+import { useStore } from '@/store'
 import { RecordsActionTypes } from "@/store/records/actions";
 import { DebtorsActionTypes } from "@/store/debtors/actions";
 
 import { TSelectorOption, TRecord, TDebtor, TSegment } from '@/types'
 import { Record, Debtor } from '@/classes'
 import { convertToOptions } from '@/helpers/convertor'
-
+import { useEmitter } from '@/emitter'
 import { listOutline, personOutline } from 'ionicons/icons';
 
 export default defineComponent({
@@ -103,11 +91,12 @@ export default defineComponent({
             required: true,
         },
     },
-    setup(props, context) {
+    setup(props) {
+        const emitter = useEmitter();
         const store = useStore();
         
         const debtorsAsOptions = computed(() => convertToOptions(store.getters.debtors, 'id', 'name'))
-        const currenciesAsOptions: Array<TSelectorOption> = convertToOptions(currencies, 'id', 'short')
+        const currenciesAsOptions: Array<TSelectorOption> = convertToOptions(store.getters.currenciesObject, "value", "value")
         const formSegments: Array<TSegment> = [
             {
                 text: 'Existing person',
@@ -126,11 +115,10 @@ export default defineComponent({
 
         const debtorName = ref<string>('')
         const formData = reactive<TRecord>(new Record)
-
         const errors = ref<Array<string>>([])
         
         const close = (): void => {
-            context.emit("close");
+            emitter.emit('create-modal-close')
             errors.value = []
         };
 
@@ -142,25 +130,24 @@ export default defineComponent({
                 errors.value.push('name')
                 valid = false
             }
-            if (!formData.price){
+            if (!formData.price || formData.price <= 0){
                 errors.value.push('price')
                 valid = false
             }
-
             return valid
         }
 
         const submit = (): void => {
-            if (!isFormValid())
-                return
-
+            if (!isFormValid()) return
+            
             if (activeSegment.value == 'new'){
-                const debtor: TDebtor = new Debtor(debtorName.value);
-                store.dispatch(DebtorsActionTypes.ADD_DEBTOR, debtor);
-                formData.debtorId = debtor.id
+                const newDebtor: TDebtor = new Debtor(debtorName.value);
+                store.dispatch(DebtorsActionTypes.ADD_DEBTOR, newDebtor);
+                formData.debtorId = newDebtor.id
             }
+            
             store.dispatch(RecordsActionTypes.ADD_RECORD, { ...formData })
-            context.emit("close")
+            close()
         }
 
         watch(() => props.active, () => {
@@ -170,6 +157,7 @@ export default defineComponent({
                 debtorName.value = ''
             }
         })
+
         onMounted(() => {
             modalPresenter.value = document.getElementById("router");
         });

@@ -3,51 +3,45 @@
         <ion-header collapse="fade" :translucent="true" mode="ios">
             <ion-toolbar>
                 <ion-title slot="start">You Owe Me</ion-title>
-                <ion-buttons slot="end" :collapse="true">
-                    <ion-button @click="openModal()">
-                        <ion-icon :icon="add"></ion-icon>
-                    </ion-button>
-                </ion-buttons>
             </ion-toolbar>
         </ion-header>
         <ion-content>
-            <ion-header collapse="condense">
+            <ion-header class="ion-margin-top ion-padding-top" collapse="condense">
                 <ion-toolbar>
-                    <ion-title slot="start" size="large">You Owe Me</ion-title>
-                    <ion-button slot="end" color="light" @click="openModal()">
-                        <ion-icon :icon="add"></ion-icon>
-                    </ion-button>
+                    <ion-title size="large">You Owe Me</ion-title>
                 </ion-toolbar>
             </ion-header>
-            <transition-group name="record">
-                <record-card
-                    class="record"
-                    v-for="record in records"  :key="record.id"
-                    :date="record.date"
-                    :time="record.time"
-                    :debtorName="debtors.find(debtor => debtor.id === record.debtorId).name"
-                    :price="record.price"
-                    :description="record.description"
-                    :currency="record.currency"
-                    @delete="removeRecord(record.id)"
-                    @click="recordClicked()">
-                </record-card>     
-            </transition-group>
+            <div class="content">
+                <transition-group name="record">
+                    <record-card
+                        class="record"
+                        v-for="record in records"  :key="record.id"
+                        :date="record.date"
+                        :time="record.time"
+                        :debtorName="debtors.find(debtor => debtor.id === record.debtorId).name"
+                        :price="record.price"
+                        :description="record.description"
+                        :currency="record.currency"
+                        @delete="removeRecord(record.id)"
+                        @click="recordClicked()">
+                    </record-card>     
+                </transition-group>
+            </div>
         </ion-content>
     </ion-page>
 </template>
 
 <script lang="ts">
 import { defineComponent, computed } from "vue";
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon, IonButtons } from "@ionic/vue";
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from "@ionic/vue";
 
 import RecordCard from "@/components/RecordCard.vue";
 
-import { useEmitter } from '@/emitter';
 import { useStore } from '@/store';
 import { RecordsActionTypes } from '@/store/records/actions'
+import { toast } from '@/helpers/toast-summoner'
 
-import { add, cashOutline } from "ionicons/icons";
+import { add, cashOutline, trashOutline } from "ionicons/icons";
 
 export default defineComponent({
     components: {
@@ -56,24 +50,18 @@ export default defineComponent({
         IonTitle,
         IonContent,
         IonPage,
-        IonIcon,
-        IonButton,
-        IonButtons,
         RecordCard,
     },
 
     setup() {
-        const emitter = useEmitter()
         const store = useStore()
         const records = computed(() => store.getters.records)
         const debtors = computed(() => store.getters.debtors)
 
-        const removeRecord = (id: string): void => {
+        const removeRecord = async (id: string): Promise<void> => {
             store.dispatch(RecordsActionTypes.REMOVE_RECORD, id)
-        };
+            await toast('Succesfully deleted', trashOutline)
 
-        const openModal = (): void => {
-            emitter.emit('create-modal-open')
         };
 
         const recordClicked = (): void => {
@@ -84,7 +72,6 @@ export default defineComponent({
             records,
             debtors,
             removeRecord,
-            openModal,
             recordClicked,
 
             // icons
@@ -96,9 +83,15 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.content{
+    display: flex;
+    flex-flow: column;
+    align-items: flex-start;
+    padding: 1rem .5rem 0;
+}
 .record {
     width: 100%;
-    padding: .5rem .5rem 0;
+    margin-bottom: .5rem;
     transition: opacity .2s, transform .3s;
 }
 .record-enter-from,

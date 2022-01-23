@@ -55,7 +55,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, onMounted, reactive, watch, computed } from "vue";
-import { IonTitle, IonToolbar, IonButtons, IonButton, IonHeader, IonContent, IonModal, IonItem, IonLabel, IonInput } from "@ionic/vue";
+import { IonTitle, IonToolbar, IonButtons, IonButton, IonHeader, IonContent, IonModal, IonItem, IonLabel, IonInput, IonIcon } from "@ionic/vue";
 import DateTimeInput from "@/components/inputs/DateTimeInput.vue";
 import SegmentSelector from "@/components/inputs/SegmentSelector.vue";
 import OptionSelector from '@/components/inputs/OptionSelector.vue'
@@ -67,8 +67,9 @@ import { DebtorsActionTypes } from "@/store/debtors/actions";
 import { TSelectorOption, TRecord, TDebtor, TSegment } from '@/types'
 import { Record, Debtor } from '@/classes'
 import { convertToOptions } from '@/helpers/convertor'
+import { toast } from '@/helpers/toast-summoner'
 import { useEmitter } from '@/emitter'
-import { listOutline, personOutline, checkmarkOutline } from 'ionicons/icons';
+import { listOutline, personOutline, checkmarkOutline, checkmarkDoneOutline } from 'ionicons/icons';
 
 export default defineComponent({
     components: {
@@ -82,6 +83,7 @@ export default defineComponent({
         IonItem,
         IonLabel,
         IonInput,
+        IonIcon,
         DateTimeInput,
         SegmentSelector,
         OptionSelector
@@ -139,17 +141,17 @@ export default defineComponent({
             return valid
         }
 
-        const submit = (): void => {
+        const submit = async (): Promise<void> => {
             if (!isFormValid()) return
-            
+
             if (activeSegment.value == 'new'){
                 const newDebtor: TDebtor = new Debtor(debtorName.value);
                 store.dispatch(DebtorsActionTypes.ADD_DEBTOR, newDebtor);
                 formData.debtorId = newDebtor.id
             }
-            
             store.dispatch(RecordsActionTypes.ADD_RECORD, { ...formData })
             close()
+            await toast('Successfully added!', checkmarkDoneOutline) 
         }
 
         watch(() => props.active, () => {
@@ -178,7 +180,7 @@ export default defineComponent({
             close,         
             
             //icons
-            listOutline, personOutline, checkmarkOutline
+            listOutline, personOutline, checkmarkOutline, checkmarkDoneOutline
         };
     },
     

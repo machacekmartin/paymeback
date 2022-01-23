@@ -17,7 +17,7 @@ export default defineComponent({
     components: {
         IonApp,
         IonRouterOutlet,
-        ModalCreateForm
+        ModalCreateForm,
     },
     setup(){
         const emitter = useEmitter()

@@ -1,7 +1,5 @@
 <template>
     <div>
-
-    
         <ion-item-sliding>
             <ion-item-options>
                 <ion-item-option color="danger" @click="deleteCard()">

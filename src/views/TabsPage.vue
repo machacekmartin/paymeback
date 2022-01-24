@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent } from "vue";
 import {
     IonTabBar,
     IonTabButton,
@@ -54,7 +54,7 @@ export default defineComponent({
         const emitter = useEmitter()
 
         const openModal = (): void => {
-            emitter.emit('create-modal-open')
+            emitter.emit('open-record-form-modal')
         };
 
         return {

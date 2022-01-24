@@ -7,7 +7,7 @@
                 </ion-item-option>
             </ion-item-options>
             <ion-item lines="none" class="ion-no-margin ion-no-padding">
-                <ion-card color="light" class="ion-no-margin ion-no-padding" :button="true">
+                <ion-card color="light" class="ion-no-margin ion-no-padding" :button="true" @click="activateCard()">
                     <ion-card-header>
                         <ion-grid class="ion-no-padding">
                             <ion-row class="ion-align-items-end">
@@ -96,6 +96,9 @@ export default defineComponent({
         const deleteCard = (): void => {
             context.emit('delete')
         }
+        const activateCard = (): void => {
+            context.emit('activate')
+        }
 
         const formattedDate = computed(() => {
             return format(parseISO(props.date), "dd. MM. yyyy")
@@ -110,7 +113,8 @@ export default defineComponent({
             formattedDate,
             formattedTime,
             
-            deleteCard
+            deleteCard,
+            activateCard
         }
     }
 });

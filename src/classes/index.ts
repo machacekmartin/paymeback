@@ -14,7 +14,7 @@ export class Record implements TRecord {
     time: string;
 
     constructor() {
-        this.id = 'id' + (new Date()).getTime();
+        this.id = new Date().getTime().toString();
         this.debtorId = store.getters.debtors[0]?.id;
         this.description = '';
         this.price = undefined;
@@ -30,7 +30,8 @@ export class Debtor implements TDebtor {
     name: string;
 
     constructor(name: string) {
-        this.id = 'id-' + (new Date()).getTime();
+        this.id = new Date().getTime().toString();
         this.name = name
     }
 }
+

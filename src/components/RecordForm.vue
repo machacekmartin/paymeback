@@ -1,10 +1,5 @@
 <template>
-    <ion-modal
-        :isOpen="active"
-        :swipeToClose="true"
-        :presentingElement="modalPresenter"
-        @didDismiss="close"
-    >
+
         <ion-header :translucent="true" :collapse="true">
             <ion-toolbar>
                 <ion-title class="ion-text-center">Add new record</ion-title>
@@ -50,12 +45,12 @@
             <date-time-input type="date" label="Date" @update="(value) => formData.date = value" :value="formData.date"></date-time-input>
             <date-time-input type="time" label="Time" @update="(value) => formData.time = value" :value="formData.time"></date-time-input>
         </ion-content>
-    </ion-modal>
+
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, reactive, watch, computed } from "vue";
-import { IonTitle, IonToolbar, IonButtons, IonButton, IonHeader, IonContent, IonModal, IonItem, IonLabel, IonInput, IonIcon } from "@ionic/vue";
+import { defineComponent, ref, onMounted, reactive, computed } from "vue";
+import { IonTitle, IonToolbar, IonButtons, IonButton, IonHeader, IonContent, IonItem, IonLabel, IonInput, IonIcon } from "@ionic/vue";
 import DateTimeInput from "@/components/inputs/DateTimeInput.vue";
 import SegmentSelector from "@/components/inputs/SegmentSelector.vue";
 import OptionSelector from '@/components/inputs/OptionSelector.vue'
@@ -67,13 +62,12 @@ import { DebtorsActionTypes } from "@/store/debtors/actions";
 import { TSelectorOption, TRecord, TDebtor, TSegment } from '@/types'
 import { Record, Debtor } from '@/classes'
 import { convertToOptions } from '@/helpers/convertor'
-import { toast } from '@/helpers/toast-summoner'
+import { toast } from '@/helpers/summoners'
 import { useEmitter } from '@/emitter'
 import { listOutline, personOutline, checkmarkOutline, checkmarkDoneOutline } from 'ionicons/icons';
 
 export default defineComponent({
     components: {
-        IonModal,
         IonTitle,
         IonToolbar,
         IonButtons,
@@ -89,13 +83,7 @@ export default defineComponent({
         OptionSelector
     },
     emits: ["close"],
-    props: {
-        active: {
-            type: Boolean,
-            required: true,
-        },
-    },
-    setup(props) {
+    setup() {
         const emitter = useEmitter();
         const store = useStore();
         
@@ -122,7 +110,7 @@ export default defineComponent({
         const errors = ref<Array<string>>([])
         
         const close = (): void => {
-            emitter.emit('create-modal-close')
+            emitter.emit('close-record-form-modal')
             errors.value = []
         };
 
@@ -153,14 +141,6 @@ export default defineComponent({
             close()
             await toast('Successfully added!', checkmarkDoneOutline) 
         }
-
-        watch(() => props.active, () => {
-            if (props.active) {
-                Object.assign(formData, new Record)
-                activeSegment.value = debtorsAsOptions.value.length > 0 ? formSegments[0].value : formSegments[1].value
-                debtorName.value = ''
-            }
-        })
 
         onMounted(() => {
             modalPresenter.value = document.getElementById("router");

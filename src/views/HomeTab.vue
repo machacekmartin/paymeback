@@ -23,7 +23,7 @@
                         :description="record.description"
                         :currency="record.currency"
                         @delete="removeRecord(record.id)"
-                        @click="recordClicked()">
+                        @activate="showQR(record.id)">
                     </record-card>     
                 </transition-group>
             </div>
@@ -37,9 +37,10 @@ import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from "@ionic/vue
 
 import RecordCard from "@/components/RecordCard.vue";
 
+import { useEmitter } from '@/emitter'
 import { useStore } from '@/store';
 import { RecordsActionTypes } from '@/store/records/actions'
-import { toast } from '@/helpers/toast-summoner'
+import { toast } from '@/helpers/summoners'
 
 import { add, cashOutline, trashOutline } from "ionicons/icons";
 
@@ -54,6 +55,7 @@ export default defineComponent({
     },
 
     setup() {
+        const emitter = useEmitter()
         const store = useStore()
         const records = computed(() => store.getters.records)
         const debtors = computed(() => store.getters.debtors)
@@ -61,18 +63,17 @@ export default defineComponent({
         const removeRecord = async (id: string): Promise<void> => {
             store.dispatch(RecordsActionTypes.REMOVE_RECORD, id)
             await toast('Succesfully deleted', trashOutline)
-
         };
 
-        const recordClicked = (): void => {
-            console.log("clicked box")
+        const showQR = (recordId: string): void => {
+            emitter.emit('open-qr-payment-modal', recordId)
         }
 
         return {
             records,
             debtors,
             removeRecord,
-            recordClicked,
+            showQR,
 
             // icons
             add, cashOutline,
@@ -84,15 +85,13 @@ export default defineComponent({
 
 <style scoped>
 .content{
-    display: flex;
-    flex-flow: column;
-    align-items: flex-start;
-    padding: 1rem .5rem 0;
+    position: relative;
+    margin: 1rem .5rem 0;
 }
 .record {
     width: 100%;
     margin-bottom: .5rem;
-    transition: opacity .2s, transform .3s;
+    transition: opacity .3s, transform .5s;
 }
 .record-enter-from,
 .record-leave-to {
@@ -100,7 +99,6 @@ export default defineComponent({
     transform: translate(-150px, 40px);
 }
 .record-leave-active {
-    margin-left: -10px;
     position: absolute;
 }
 

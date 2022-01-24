@@ -1,38 +1,52 @@
 <template>
     <ion-app>
         <ion-router-outlet />
-        <modal-create-form :active="isCreateModalOpen"></modal-create-form>
     </ion-app>
 </template>
 
 <script lang="ts">
 import { IonApp, IonRouterOutlet } from "@ionic/vue";
-import { defineComponent, ref } from "vue";
-import ModalCreateForm from '@/components/ModalCreateForm.vue'
 
+import { defineComponent, ref, onMounted } from "vue";
+import RecordForm from '@/components/RecordForm.vue'
+import QrPayment from '@/components/QrPayment.vue'
 import { useEmitter } from '@/emitter';
+import { modal } from '@/helpers/summoners';
+
 
 export default defineComponent({
     name: "App",
     components: {
         IonApp,
         IonRouterOutlet,
-        ModalCreateForm,
     },
     setup(){
         const emitter = useEmitter()
-        const isCreateModalOpen = ref<boolean>(false)
+        const modalPresenter = ref<any>();
+        
+        // eslint-disable-next-line
+        let recordFormModal: HTMLIonModalElement | null = null;
+        // eslint-disable-next-line
+        let qrPaymentModal: HTMLIonModalElement | null = null;
 
-        emitter.on('create-modal-close', () => {
-            isCreateModalOpen.value = false
+        emitter.on('open-record-form-modal', async () => {
+            recordFormModal = await modal({ component: RecordForm, swipeToClose: true, presentingElement: modalPresenter.value })
         })
-        emitter.on('create-modal-open', () => {
-            isCreateModalOpen.value = true
+        emitter.on('close-record-form-modal', () => {
+            recordFormModal?.dismiss()
+        })
+        emitter.on('open-qr-payment-modal', async (recordId: string) => {
+            qrPaymentModal = await modal({ component: QrPayment, componentProps: { recordId: recordId }, cssClass: 'qr-modal', swipeToClose: true })
+        })
+        emitter.on('close-qr-payment-modal', () => {
+            qrPaymentModal?.dismiss()
         })
 
-        return{
-            isCreateModalOpen
-        }
+        onMounted(() => {
+            modalPresenter.value = document.getElementById("router")
+        })
+
+        return{}
     }
 });
 </script>

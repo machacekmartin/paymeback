@@ -6,7 +6,7 @@
             </ion-toolbar>
         </ion-header>
         <ion-content>
-            <ion-header class="ion-margin-top ion-padding-top" collapse="condense">
+            <ion-header collapse="condense">
                 <ion-toolbar>
                     <ion-title size="large">You Owe Me</ion-title>
                 </ion-toolbar>

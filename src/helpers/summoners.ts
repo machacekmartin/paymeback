@@ -2,7 +2,7 @@ import { toastController, modalController } from "@ionic/vue";
 
 export async function toast(message: string, icon: string) {
     const toast = await toastController.create({
-        color: 'tertiary',
+        color: 'light',
         position: 'top',
         duration: 2000,
         message: message,

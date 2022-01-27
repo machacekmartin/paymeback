@@ -1,6 +1,5 @@
 <template>
-
-        <ion-header :translucent="true" :collapse="true">
+        <ion-header :translucent="true">
             <ion-toolbar>
                 <ion-title class="ion-text-center">Add new record</ion-title>
                 <ion-buttons slot="start">
@@ -19,38 +18,50 @@
 
             <template v-if="activeSegment == 'existing'">
                 <ion-item>
-                    <ion-label position="fixed">Person</ion-label>
-                    <option-selector :options="debtorsAsOptions" placeholder="Select a person.." type="action-sheet" v-model="formData.debtorId"></option-selector>
+                    <ion-label>
+                        <ion-icon size="small" :icon="listOutline"></ion-icon>
+                        <ion-text>Person</ion-text>
+                    </ion-label>
+                    <option-selector :options="debtorsAsOptions" placeholder="Select a person.." interface="action-sheet" v-model="formData.debtorId"></option-selector>
                 </ion-item>
             </template>
 
             <template v-else-if="activeSegment == 'new'">
                 <ion-item :class="{ 'error': errors.includes('name') }">
-                    <ion-label position="fixed">Name</ion-label>
-                    <ion-input :autocapitalize="true" placeholder="His / Her name" type="text" v-model="debtorName"></ion-input>
+                    <ion-label>
+                        <ion-icon size="small" :icon="personOutline"></ion-icon>
+                        <ion-text>Name</ion-text>
+                    </ion-label>
+                    <ion-input :autocapitalize="true" placeholder="..." type="text" v-model="debtorName"></ion-input>
                 </ion-item>
             </template>
 
             <ion-item>
-                <ion-label position="fixed">Note</ion-label>
-                <ion-input :autocapitalize="true" placeholder="Some description" type="text" v-model="formData.description"></ion-input>
+                <ion-label>
+                    <ion-icon size="small" :icon="chatboxOutline"></ion-icon>
+                    <ion-text>Note</ion-text>
+                </ion-label>
+                <ion-input :autocapitalize="true" placeholder="..." type="text" v-model="formData.description"></ion-input>
             </ion-item>
 
             <ion-item :class="{ 'error': errors.includes('price') }">
-                <ion-label position="fixed">Amount</ion-label>
-                <ion-input  type="number" inputMode="numeric" :placeholder="389" v-model.number="formData.price" :required="true"></ion-input>
-                <option-selector :options="currenciesAsOptions" placeholder="Currency" type="action-sheet"  v-model="formData.currency"></option-selector>
+                <ion-label>
+                    <ion-icon size="small" :icon="cashOutline"></ion-icon>
+                    <ion-text>Price</ion-text>
+                </ion-label>
+                <ion-input type="number" inputMode="numeric" :placeholder="389" v-model.number="formData.price" :required="true"></ion-input>
+                <option-selector :options="currenciesAsOptions" placeholder="Currency" interface="action-sheet" v-model="formData.currency"></option-selector>
             </ion-item>
+            
 
             <date-time-input type="date" label="Date" @update="(value) => formData.date = value" :value="formData.date"></date-time-input>
             <date-time-input type="time" label="Time" @update="(value) => formData.time = value" :value="formData.time"></date-time-input>
         </ion-content>
-
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, onMounted, reactive, computed } from "vue";
-import { IonTitle, IonToolbar, IonButtons, IonButton, IonHeader, IonContent, IonItem, IonLabel, IonInput, IonIcon } from "@ionic/vue";
+import { IonTitle, IonToolbar, IonText, IonButtons, IonButton, IonHeader, IonContent, IonItem, IonLabel, IonInput, IonIcon } from "@ionic/vue";
 import DateTimeInput from "@/components/inputs/DateTimeInput.vue";
 import SegmentSelector from "@/components/inputs/SegmentSelector.vue";
 import OptionSelector from '@/components/inputs/OptionSelector.vue'
@@ -61,10 +72,10 @@ import { DebtorsActionTypes } from "@/store/debtors/actions";
 
 import { TSelectorOption, TRecord, TDebtor, TSegment } from '@/types'
 import { Record, Debtor } from '@/classes'
-import { convertToOptions } from '@/helpers/convertor'
+import { convertToOptions, strArrayToOptions } from '@/helpers/convertor'
 import { toast } from '@/helpers/summoners'
 import { useEmitter } from '@/emitter'
-import { listOutline, personOutline, checkmarkOutline, checkmarkDoneOutline } from 'ionicons/icons';
+import { listOutline, personOutline, checkmarkOutline, checkmarkDoneOutline, personCircleOutline, chatboxOutline, cashOutline, calendarOutline } from 'ionicons/icons';
 
 export default defineComponent({
     components: {
@@ -78,6 +89,7 @@ export default defineComponent({
         IonLabel,
         IonInput,
         IonIcon,
+        IonText,
         DateTimeInput,
         SegmentSelector,
         OptionSelector
@@ -88,7 +100,7 @@ export default defineComponent({
         const store = useStore();
         
         const debtorsAsOptions = computed(() => convertToOptions(store.getters.debtors, 'id', 'name'))
-        const currenciesAsOptions: Array<TSelectorOption> = convertToOptions(store.getters.currenciesObject, "value", "value")
+        const currenciesAsOptions: Array<TSelectorOption> = strArrayToOptions(store.getters.currencies)
         const formSegments: Array<TSegment> = [
             {
                 text: 'Existing person',
@@ -160,10 +172,9 @@ export default defineComponent({
             close,         
             
             //icons
-            listOutline, personOutline, checkmarkOutline, checkmarkDoneOutline
+            listOutline, personOutline, checkmarkOutline, checkmarkDoneOutline, personCircleOutline, chatboxOutline, cashOutline, calendarOutline
         };
     },
-    
 });
 </script>
 
@@ -177,9 +188,17 @@ ion-item {
     --inner-padding-end: 0px;
     border: solid 1px transparent;
 }
+ion-content ion-icon{
+    color: var(--ion-color-medium)
+}
 ion-label {
+    display: flex !important;
+    align-items: center;
     padding: 0.5rem 1rem;
-    font-weight: bold;
+    width: 125px;
+}
+ion-text{
+    margin-left: 1rem;
 }
 ion-segment {
     margin: 0.5rem auto;

@@ -15,5 +15,6 @@ export type Mutations<S = State> = {
 export const mutations: MutationTree<State> & Mutations = {
     [DebtorsMutationTypes.ADD_DEBTOR](state: State, debtor: TDebtor) {
         state.debtors.push(debtor)
+        localStorage.setItem('debtors', JSON.stringify(state.debtors))
     },
 }

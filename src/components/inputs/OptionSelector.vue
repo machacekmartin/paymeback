@@ -1,8 +1,5 @@
 <template>
-    <ion-select
-        :interface="type"
-        :placeholder="placeholder"
-    >
+    <ion-select>
         <ion-select-option
             v-for="option in options"
             :key="option.value"
@@ -26,17 +23,6 @@ export default defineComponent({
         options: {
             type: Array,
             required: true,
-        },
-        placeholder: {
-            type: String,
-            required: true,
-        },
-        type: {
-            type: String,
-            required: false,
-            validator: (value: string): boolean => {
-                return ["action-sheet", "selector"].includes(value);
-            },
         },
     },
 });

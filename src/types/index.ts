@@ -13,11 +13,11 @@ export type TDebtor = {
     name: string
 }
 
-export type TCurrency = 'CZK' | 'EUR' | 'USD' | 'JPN' 
+export type TCurrency = string
 
 export type TSelectorOption = {
     text: string,
-    value: string | number 
+    value: string | number
 }
 
 export type TSegment = {

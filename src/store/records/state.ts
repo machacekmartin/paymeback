@@ -5,5 +5,5 @@ export type State = {
 }
 
 export const state: State = {
-    records: []
+    records: JSON.parse(localStorage.getItem('records') as string) || []
 }

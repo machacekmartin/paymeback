@@ -26,8 +26,8 @@ export default defineComponent({
     },
     setup(){
         const emitter = useEmitter()
-        const modalPresenter = ref<any>();
-        const introPassed = ref<boolean>(false)
+        const modalPresenter = ref<HTMLElement | null>();
+        const introPassed = JSON.parse(localStorage.getItem('intro') as string) || ref<boolean>(false)
         
         // eslint-disable-next-line
         let recordFormModal: HTMLIonModalElement | null = null;
@@ -35,6 +35,7 @@ export default defineComponent({
         let qrPaymentModal: HTMLIonModalElement | null = null;
 
         emitter.on('complete-intro', async () => {
+            localStorage.setItem('intro', JSON.stringify(true))
             introPassed.value = true
         })
         emitter.on('open-record-form-modal', async () => {
@@ -48,7 +49,7 @@ export default defineComponent({
         })
         emitter.on('close-qr-payment-modal', () => {
             qrPaymentModal?.dismiss()
-        })
+        })        
 
         onMounted(() => {
             modalPresenter.value = document.getElementById("router")

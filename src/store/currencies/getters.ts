@@ -6,19 +6,15 @@ import { State } from './state'
 import { TCurrency } from '@/types'
 
 export type Getters = {
-    currencies(state: State): TCurrency[]
+    currencies(state: State): TCurrency[],
+    availableCurrencies(state: State): TCurrency[],
+
     defaultCurrency(state: State): TCurrency,
-    currenciesObject(state: State): Array<object>
 }
 
 export const getters : GetterTree<State, RootState> & Getters = {
     currencies: (state) => state.currencies,
+    availableCurrencies: (state) => state.availableCurrencies,
+
     defaultCurrency: (state) => state.defaultCurrency,
-    currenciesObject: (state): Array<object> => {
-        return state.currencies.map((currency): object => {
-            return {
-                value: currency
-            }
-        })
-    }
 }

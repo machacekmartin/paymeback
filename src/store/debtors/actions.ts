@@ -6,7 +6,6 @@ import { Mutations, DebtorsMutationTypes } from './mutations';
 
 import { TDebtor } from '@/types'
 
-
 export enum DebtorsActionTypes {
     ADD_DEBTOR = 'ADD_DEBTOR',
 }

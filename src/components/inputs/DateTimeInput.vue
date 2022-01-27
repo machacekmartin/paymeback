@@ -3,7 +3,8 @@
         <ion-accordion>
             <ion-item slot="header" class="header">
                 <ion-label>
-                    {{ label }}
+                    <ion-icon size="small" :icon="type=='date' ? calendarOutline : timeOutline"></ion-icon>
+                    <ion-text>{{ label }}</ion-text>
                 </ion-label>
                 <ion-text>{{ displayValue }}</ion-text>
             </ion-item>
@@ -32,9 +33,11 @@ import {
     IonLabel,
     IonText,
     IonList,
+    IonIcon
 } from "@ionic/vue";
 import { defineComponent, ComputedRef, computed } from "vue";
 import { format, parseISO } from "date-fns";
+import { calendarOutline, timeOutline } from 'ionicons/icons';
 
 export default defineComponent({
     components: {
@@ -45,6 +48,7 @@ export default defineComponent({
         IonLabel,
         IonText,
         IonList,
+        IonIcon
     },
     props: {
         type: {
@@ -80,7 +84,9 @@ export default defineComponent({
 
         return {
             changeDate,
-            displayValue
+            displayValue,
+
+            calendarOutline, timeOutline
         };
     },
 });
@@ -93,11 +99,18 @@ ion-item {
     --inner-padding-end: 0px;
 }
 ion-label {
+    display: flex !important;
+    align-items: center;
     padding: 0.5rem 1rem;
-    font-weight: bold;
+}
+ion-text{
+    margin-left: 1rem;
 }
 ion-item.header{
     border-bottom: solid .5px var(--border-color);
+}
+ion-icon{
+    color: var(--ion-color-medium)
 }
 
 </style>

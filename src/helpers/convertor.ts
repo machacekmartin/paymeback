@@ -8,3 +8,12 @@ export const convertToOptions = (array: Array<any>, valueKey: string, textKey: s
         }
     })
 }
+
+export const strArrayToOptions = (array: Array<string>) : Array<TSelectorOption> => {
+    return array.map((str): TSelectorOption => {
+        return {
+            value: str,
+            text: str
+        }
+    })
+}

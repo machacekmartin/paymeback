@@ -7,7 +7,8 @@ import { Mutations, CurrenciesMutationTypes } from './mutations';
 import { TCurrency } from '@/types'
 
 export enum CurrenciesActionTypes {
-    ADD_CURRENCY = 'ADD_CURRENCY',
+    UPDATE_CURRENCIES = 'UPDATE_CURRENCIES',
+    CHANGE_DEFAULT_CURRENCY = 'CHANGE_DEFAULT_CURRENCY'
 }
 
 type AugmentedActionContext = {
@@ -19,11 +20,15 @@ type AugmentedActionContext = {
 & Omit<ActionContext<State, RootState>, 'commit'>
 
 export interface Actions {
-    [CurrenciesActionTypes.ADD_CURRENCY]({ commit }: AugmentedActionContext, currency: TCurrency): void,   
+    [CurrenciesActionTypes.UPDATE_CURRENCIES]({ commit }: AugmentedActionContext, currencies: TCurrency[]): void,   
+    [CurrenciesActionTypes.CHANGE_DEFAULT_CURRENCY]({ commit }: AugmentedActionContext, currency: TCurrency): void,   
 }
 
 export const actions: ActionTree<State, RootState> & Actions = {
-    [CurrenciesActionTypes.ADD_CURRENCY]({ commit }, currency: TCurrency) {
-        commit(CurrenciesMutationTypes.ADD_CURRENCY, currency)
+    [CurrenciesActionTypes.UPDATE_CURRENCIES]({ commit }, currencies: TCurrency[]) {
+        commit(CurrenciesMutationTypes.UPDATE_CURRENCIES, currencies)
+    },
+    [CurrenciesActionTypes.CHANGE_DEFAULT_CURRENCY]({ commit }, currency: TCurrency) {
+        commit(CurrenciesMutationTypes.CHANGE_DEFAULT_CURRENCY, currency)
     },
 };

@@ -8,9 +8,9 @@
             </ion-item-options>
             <ion-item lines="none" class="ion-no-margin ion-no-padding">
                 <ion-card color="light" class="ion-no-margin ion-no-padding" :button="true" @click="activateCard()">
-                    <ion-card-header>
+                    <ion-card-header class="ion-padding">
                         <ion-grid class="ion-no-padding">
-                            <ion-row class="ion-align-items-end">
+                            <ion-row class="ion-align-items-center">
                                 <ion-col>
                                     <ion-card-subtitle>
                                         <span>{{ formattedDate }}</span>
@@ -33,7 +33,7 @@
                             </ion-row>
                         </ion-grid>
                     </ion-card-header>
-                    <ion-card-content>
+                    <ion-card-content class="ion-padding" v-if="description">
                         <p>{{ description }}</p>
                     </ion-card-content>
                 </ion-card>
@@ -123,7 +123,7 @@ export default defineComponent({
 <style scoped>
 ion-card {
     width: 100%;
-    box-shadow: none;
+    border: solid 1px var(--ion-color-light-shade);
 }
 ion-item{
     --inner-padding-end: 0;
@@ -132,6 +132,13 @@ ion-item{
 }
 ion-item:host{
     background: transparent;
+}
+
+ion-card-content{
+    color: var(--ion-color-medium)
+}
+ion-card-subtitle > span{
+    color: var(--ion-color-medium)
 }
 ion-card-subtitle > span:first-child{
     padding-right: .5rem;

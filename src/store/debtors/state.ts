@@ -5,5 +5,5 @@ export type State = {
 }
 
 export const state: State = {
-    debtors: []
+    debtors: JSON.parse(localStorage.getItem('debtors') as string) || []
 }

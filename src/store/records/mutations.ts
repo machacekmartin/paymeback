@@ -17,9 +17,11 @@ export type Mutations<S = State> = {
 export const mutations: MutationTree<State> & Mutations = {
     [RecordsMutationTypes.ADD_RECORD](state: State, record: TRecord) {
         state.records.push(record)
+        localStorage.setItem('records', JSON.stringify(state.records))
     },
     [RecordsMutationTypes.REMOVE_RECORD](state: State, id: string) {
         const targetIndex = state.records.findIndex(record => record.id === id)
         state.records.splice(targetIndex, 1)
+        localStorage.setItem('records', JSON.stringify(state.records))
     }
 }

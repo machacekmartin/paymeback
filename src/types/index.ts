@@ -1,11 +1,11 @@
 export type TRecord = {
     id: string;
-    date: string;
-    time: string;
     debtorId: string;
     description: string;
     price: number | undefined;
     currency: TCurrency;
+    datetime: string;
+    paybackDatetime?: string;
 }
 
 export type TDebtor = {

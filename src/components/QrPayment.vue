@@ -68,6 +68,8 @@ export default defineComponent({
     background-color: var(--ion-color-step-100);
     overflow: hidden;
 }
+</style>
+<style scoped>
 .qr{
     position: absolute;
     width: 100%;

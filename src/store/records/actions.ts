@@ -8,7 +8,7 @@ import { TRecord } from '@/types'
 
 export enum RecordsActionTypes {
     ADD_RECORD = 'ADD_RECORD',
-    REMOVE_RECORD = 'REMOVE_RECORD'
+    PAYBACK_RECORD = 'PAYBACK_RECORD'
 }
 
 type AugmentedActionContext = {
@@ -22,14 +22,14 @@ type AugmentedActionContext = {
 
 export interface Actions {
     [RecordsActionTypes.ADD_RECORD]({ commit }: AugmentedActionContext, record: TRecord): void,
-    [RecordsActionTypes.REMOVE_RECORD]({ commit }: AugmentedActionContext, id: string): void
+    [RecordsActionTypes.PAYBACK_RECORD]({ commit }: AugmentedActionContext, id: string): void
 }
 
 export const actions: ActionTree<State, RootState> & Actions = {
     [RecordsActionTypes.ADD_RECORD]({ commit }, record: TRecord) {
         commit(RecordsMutationTypes.ADD_RECORD, record)
     },
-    [RecordsActionTypes.REMOVE_RECORD]({ commit }, id: string) {
-        commit(RecordsMutationTypes.REMOVE_RECORD, id)
+    [RecordsActionTypes.PAYBACK_RECORD]({ commit }, id: string) {
+        commit(RecordsMutationTypes.PAYBACK_RECORD, id)
     }
 };

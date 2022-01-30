@@ -1,8 +1,8 @@
 <template>
     <ion-page>
-        <ion-header>
+        <ion-header collapse="fade" :translucent="true" mode="ios">
             <ion-toolbar>
-                <ion-title>Settings</ion-title>
+                <ion-title slot="start">Settings</ion-title>
             </ion-toolbar>
         </ion-header>
         <ion-content>
@@ -32,6 +32,8 @@
                 </ion-label>
                 <option-selector :options="availableCurrenciesAsOptions" v-model="defaultCurrency" interface="action-sheet"></option-selector>
             </ion-item>
+        </ion-content>
+        <ion-footer>
             <ion-item>
                 <ion-label>
                     <ion-icon size="large" :icon="refreshOutline"></ion-icon>
@@ -41,7 +43,7 @@
                     <ion-icon size="small" :icon="chevronForwardOutline"></ion-icon>
                 </ion-button>
             </ion-item>
-        </ion-content>
+        </ion-footer>
     </ion-page>
 </template>
 
@@ -57,10 +59,11 @@ import {
     IonLabel,
     IonIcon,
     IonText,
-    IonButton
+    IonButton,
+    IonFooter
 } from "@ionic/vue";
 import OptionSelector from '@/components/inputs/OptionSelector.vue'
-import { defineComponent, computed, ref, watch } from "vue";
+import { defineComponent, ref, watch } from "vue";
 import { useStore } from '@/store';
 import { listOutline, qrCodeOutline, cashOutline, globeOutline, clipboardOutline, refreshOutline, chevronForwardOutline } from 'ionicons/icons';
 
@@ -81,6 +84,7 @@ export default defineComponent({
         IonIcon,
         IonText,
         IonButton,
+        IonFooter,
         OptionSelector
     },
     setup() {
@@ -95,9 +99,6 @@ export default defineComponent({
         watch(defaultCurrency, () => {
             store.dispatch(CurrenciesActionTypes.CHANGE_DEFAULT_CURRENCY, defaultCurrency.value)
         })
-        const helo = () => {
-            alert("ayasy")
-        }
 
         return {
             availableCurrenciesAsOptions,
@@ -111,7 +112,6 @@ export default defineComponent({
             clipboardOutline,
             refreshOutline,
             chevronForwardOutline,
-            helo
         }
     }
 });

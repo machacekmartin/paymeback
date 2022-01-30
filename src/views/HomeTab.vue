@@ -15,13 +15,12 @@
                 <transition-group name="record">
                     <record-card
                         class="record"
-                        v-for="record in records"  :key="record.id"
-                        :date="record.date"
-                        :time="record.time"
+                        v-for="record in currentRecords" :key="record.id"
                         :debtorName="debtors.find(debtor => debtor.id === record.debtorId).name"
                         :price="record.price"
                         :description="record.description"
                         :currency="record.currency"
+                        :datetime="record.datetime"
                         @delete="removeRecord(record.id)"
                         @activate="showQR(record.id)">
                     </record-card>     
@@ -38,7 +37,7 @@ import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from "@ionic/vue
 import RecordCard from "@/components/RecordCard.vue";
 
 import { useEmitter } from '@/emitter'
-import { useStore } from '@/store';
+import { useStore } from '@/store'
 import { RecordsActionTypes } from '@/store/records/actions'
 import { toast } from '@/helpers/summoners'
 
@@ -57,11 +56,11 @@ export default defineComponent({
     setup() {
         const emitter = useEmitter()
         const store = useStore()
-        const records = computed(() => store.getters.records)
+        const currentRecords = computed(() => store.getters.records.filter(record => record.paybackDatetime === undefined))
         const debtors = computed(() => store.getters.debtors)
 
         const removeRecord = async (id: string): Promise<void> => {
-            store.dispatch(RecordsActionTypes.REMOVE_RECORD, id)
+            store.dispatch(RecordsActionTypes.PAYBACK_RECORD, id)
             await toast('Succesfully deleted', trashOutline)
         };
 
@@ -70,7 +69,7 @@ export default defineComponent({
         }
 
         return {
-            records,
+            currentRecords,
             debtors,
             removeRecord,
             showQR,

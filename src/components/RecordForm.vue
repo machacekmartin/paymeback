@@ -10,12 +10,10 @@
                 </ion-button>
             </ion-toolbar>
         </ion-header>
-
         <ion-content>
             <ion-toolbar>
                 <segment-selector :disabled="!debtorsAsOptions.length" :options="formSegments" v-model="activeSegment"></segment-selector>
             </ion-toolbar>
-
             <template v-if="activeSegment == 'existing'">
                 <ion-item>
                     <ion-label>
@@ -25,7 +23,6 @@
                     <option-selector :options="debtorsAsOptions" placeholder="Select a person.." interface="action-sheet" v-model="formData.debtorId"></option-selector>
                 </ion-item>
             </template>
-
             <template v-else-if="activeSegment == 'new'">
                 <ion-item :class="{ 'error': errors.includes('name') }">
                     <ion-label>
@@ -35,7 +32,6 @@
                     <ion-input :autocapitalize="true" placeholder="..." type="text" v-model="debtorName"></ion-input>
                 </ion-item>
             </template>
-
             <ion-item>
                 <ion-label>
                     <ion-icon size="small" :icon="chatboxOutline"></ion-icon>
@@ -43,7 +39,6 @@
                 </ion-label>
                 <ion-input :autocapitalize="true" placeholder="..." type="text" v-model="formData.description"></ion-input>
             </ion-item>
-
             <ion-item :class="{ 'error': errors.includes('price') }">
                 <ion-label>
                     <ion-icon size="small" :icon="cashOutline"></ion-icon>
@@ -52,19 +47,17 @@
                 <ion-input type="number" inputMode="numeric" :placeholder="389" v-model.number="formData.price" :required="true"></ion-input>
                 <option-selector :options="currenciesAsOptions" placeholder="Currency" interface="action-sheet" v-model="formData.currency"></option-selector>
             </ion-item>
-            
-
-            <date-time-input type="date" label="Date" @update="(value) => formData.date = value" :value="formData.date"></date-time-input>
-            <date-time-input type="time" label="Time" @update="(value) => formData.time = value" :value="formData.time"></date-time-input>
+            <datetime-input @update="(value) => formData.datetime = value" :value="formData.datetime"></datetime-input>
         </ion-content>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, onMounted, reactive, computed } from "vue";
 import { IonTitle, IonToolbar, IonText, IonButtons, IonButton, IonHeader, IonContent, IonItem, IonLabel, IonInput, IonIcon } from "@ionic/vue";
-import DateTimeInput from "@/components/inputs/DateTimeInput.vue";
+
 import SegmentSelector from "@/components/inputs/SegmentSelector.vue";
 import OptionSelector from '@/components/inputs/OptionSelector.vue'
+import DatetimeInput from '@/components/inputs/DatetimeInput.vue'
 
 import { useStore } from '@/store'
 import { RecordsActionTypes } from "@/store/records/actions";
@@ -90,7 +83,7 @@ export default defineComponent({
         IonInput,
         IonIcon,
         IonText,
-        DateTimeInput,
+        DatetimeInput,
         SegmentSelector,
         OptionSelector
     },

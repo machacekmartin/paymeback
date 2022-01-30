@@ -7,17 +7,16 @@
                 </ion-item-option>
             </ion-item-options>
             <ion-item lines="none" class="ion-no-margin ion-no-padding">
-                <ion-card color="light" class="ion-no-margin ion-no-padding" :button="true" @click="activateCard()">
-                    <ion-card-header class="ion-padding">
+                <ion-card color="light" class="ion-no-margin" :button="true" @click="activateCard()">
+                    <ion-card-header class="ion-no-padding">
                         <ion-grid class="ion-no-padding">
                             <ion-row class="ion-align-items-center">
                                 <ion-col>
                                     <ion-card-subtitle>
-                                        <span>{{ formattedDate }}</span>
-                                        <span>{{ formattedTime }}</span>
+                                        <span>{{ datetimeFormatted }}</span>
                                     </ion-card-subtitle>
                                     <ion-card-title>
-                                        <h2 class="ion-no-margin">{{ debtorName }}</h2>
+                                        <h3 class="ion-no-margin">{{ debtorName }}</h3>
                                     </ion-card-title>
                                 </ion-col>
                                 <ion-col size="auto">
@@ -33,8 +32,8 @@
                             </ion-row>
                         </ion-grid>
                     </ion-card-header>
-                    <ion-card-content class="ion-padding" v-if="description">
-                        <p>{{ description }}</p>
+                    <ion-card-content class="ion-no-padding" v-if="description">
+                        <small>{{ description }}</small>
                     </ion-card-content>
                 </ion-card>
             </ion-item>
@@ -43,7 +42,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from "vue";
+import { defineComponent, computed, ComputedRef } from "vue";
 import { IonCard, IonIcon, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent, IonGrid, IonRow, IonCol, IonText, IonItemSliding, IonItemOptions, IonItem, IonItemOption } from "@ionic/vue";
 
 import { format, parseISO } from "date-fns";
@@ -67,13 +66,9 @@ export default defineComponent({
         IonItemOption,
     },
     props: {
-        date: {
+        datetime: {
             type: String,
             required: true,
-        },
-        time: {
-            type: String,
-            required: true
         },
         price: {
             type: Number,
@@ -100,18 +95,14 @@ export default defineComponent({
             context.emit('activate')
         }
 
-        const formattedDate = computed(() => {
-            return format(parseISO(props.date), "dd. MM. yyyy")
-        })
-        const formattedTime = computed(() => {
-            return format(parseISO(props.time), "h:mm a")
+        const datetimeFormatted: ComputedRef<string> = computed(() : string => {
+            return format(parseISO(props.datetime), "dd. MM. yyyy' 'h:mm a")
         })
 
         return {
             trashBinOutline, 
             createOutline, 
-            formattedDate,
-            formattedTime,
+            datetimeFormatted,
             
             deleteCard,
             activateCard
@@ -124,6 +115,7 @@ export default defineComponent({
 ion-card {
     width: 100%;
     border: solid 1px var(--ion-color-light-shade);
+    padding: .5rem 1rem;
 }
 ion-item{
     --inner-padding-end: 0;

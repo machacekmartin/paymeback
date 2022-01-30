@@ -3,10 +3,12 @@
         <ion-accordion>
             <ion-item slot="header" class="header">
                 <ion-label>
-                    <ion-icon size="small" :icon="type=='date' ? calendarOutline : timeOutline"></ion-icon>
-                    <ion-text>{{ label }}</ion-text>
+                    <ion-icon size="small" :icon="calendarOutline"></ion-icon>
+                    <ion-text>Date & Time</ion-text>
                 </ion-label>
-                <ion-text>{{ displayValue }}</ion-text>
+                <ion-text>
+                    {{ valueFormatted }}
+                </ion-text>
             </ion-item>
             <ion-list slot="content">
                 <ion-item>
@@ -14,8 +16,9 @@
                         color="danger"
                         size="cover"
                         hourCycle="hourCycle"
-                        :presentation="type"
+                        presentation="time-date"
                         :value="value"
+                        :showClearButton="true"
                         @ionChange="(event) => changeDate(event.detail.value)"
                     ></ion-datetime>
                 </ion-item>
@@ -37,7 +40,7 @@ import {
 } from "@ionic/vue";
 import { defineComponent, ComputedRef, computed } from "vue";
 import { format, parseISO } from "date-fns";
-import { calendarOutline, timeOutline } from 'ionicons/icons';
+import { calendarOutline } from 'ionicons/icons';
 
 export default defineComponent({
     components: {
@@ -51,18 +54,6 @@ export default defineComponent({
         IonIcon
     },
     props: {
-        type: {
-            type: String,
-            required: true,
-            validator: (value: string): boolean => {
-                return ['date', 'time'].includes(value)
-            }
-        },
-        label: {
-            type: String,
-            required: false,
-            default: 'Date'
-        },
         value: {
             type: String,
             required: true
@@ -70,23 +61,19 @@ export default defineComponent({
     },
 
     setup(props, context) {
-
-        const displayValue: ComputedRef<string> = computed(() : string => {
-            if (props.type == 'date'){
-                return format(parseISO(props.value), "dd. MM. yyyy")
-            }
-            return format(parseISO(props.value), "hh:mm a")
+        const valueFormatted: ComputedRef<string> = computed(() : string => {
+            return format(parseISO(props.value), "dd. MM. yyyy' 'h:mm a")
         })
 
         const changeDate = (isoValue: string): void => {
+            console.log(isoValue)
             context.emit('update', isoValue)
         };
 
         return {
             changeDate,
-            displayValue,
-
-            calendarOutline, timeOutline
+            valueFormatted,
+            calendarOutline
         };
     },
 });
@@ -105,6 +92,7 @@ ion-label {
 }
 ion-text{
     margin-left: 1rem;
+    max-width: 100px;
 }
 ion-item.header{
     border-bottom: solid .5px var(--border-color);

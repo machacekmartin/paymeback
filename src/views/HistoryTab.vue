@@ -1,16 +1,27 @@
 <template>
     <ion-page>
-        <ion-header>
+        <ion-header collapse="fade" :translucent="true" mode="ios">
             <ion-toolbar>
-                <ion-title>Tab 3</ion-title>
+                <ion-title>History</ion-title>
             </ion-toolbar>
         </ion-header>
         <ion-content :fullscreen="true">
-            <ion-header collapse="condense">
+            <ion-header collapse="condense"  class="ion-margin-bottom" >
                 <ion-toolbar>
-                    <ion-title size="large">Tab 3</ion-title>
+                    <ion-title size="large">History</ion-title>
                 </ion-toolbar>
             </ion-header>
+
+            <past-record-card 
+                v-for="record in pastRecords" 
+                :key="record.id"
+                :debtorName="debtors.find(debtor => debtor.id === record.debtorId).name"
+                :price="record.price"
+                :description="record.description"
+                :currency="record.currency"
+                :datetime="record.datetime"
+                :paybackDatetime="record.paybackDatetime">
+            </past-record-card>
         </ion-content>
     </ion-page>
 </template>
@@ -21,9 +32,11 @@ import {
     IonHeader,
     IonToolbar,
     IonTitle,
-    IonContent,
+    IonContent
 } from "@ionic/vue";
-import { defineComponent } from "vue";
+import { defineComponent, computed } from "vue";
+import PastRecordCard from '@/components/PastRecordCard.vue'
+import { useStore } from '@/store'
 
 export default defineComponent({
     components: {
@@ -32,6 +45,17 @@ export default defineComponent({
         IonTitle,
         IonContent,
         IonPage,
+        PastRecordCard
     },
+    setup(){
+        const store = useStore()
+        const pastRecords = computed(() => store.getters.records.filter(record => record.paybackDatetime !== undefined))
+        const debtors = computed(() => store.getters.debtors)
+
+        return {
+            pastRecords,
+            debtors
+        }
+    }
 });
 </script>

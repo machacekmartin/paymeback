@@ -10,8 +10,7 @@ export class Record implements TRecord {
     description: string;
     price: number | undefined;
     currency: TCurrency;
-    date: string;
-    time: string;
+    datetime: string;
 
     constructor() {
         this.id = new Date().getTime().toString();
@@ -19,8 +18,7 @@ export class Record implements TRecord {
         this.description = '';
         this.price = undefined;
         this.currency = store.getters.defaultCurrency;
-        this.date = new Date().toISOString();
-        this.time = new Date().toISOString();
+        this.datetime = new Date().toISOString();
     }
 }
 

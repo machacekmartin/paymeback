@@ -16,7 +16,7 @@
                     <ion-icon size="large" :icon="qrCodeOutline"></ion-icon>
                     <ion-text>IBAN</ion-text>
                 </ion-label>
-                <ion-input :autocapitalize="true" placeholder="Your account's IBAN number" type="text"></ion-input>
+                <ion-input v-model="iban" :autocapitalize="true" placeholder="Your account's IBAN number" type="text"></ion-input>
             </ion-item>
             <ion-item>
                 <ion-label>
@@ -70,6 +70,7 @@ import { listOutline, qrCodeOutline, cashOutline, globeOutline, clipboardOutline
 import { strArrayToOptions } from '@/helpers/convertor'
 import { TCurrency, TSelectorOption } from "@/types";
 import { CurrenciesActionTypes } from "@/store/currencies/actions";
+import { SettingsActionTypes } from "@/store/settings/actions";
 
 export default defineComponent({
     components: {
@@ -92,6 +93,7 @@ export default defineComponent({
         const availableCurrenciesAsOptions: Array<TSelectorOption> = strArrayToOptions(store.getters.availableCurrencies)
         const activeCurrencies = ref<TCurrency[]>(store.getters.currencies)
         const defaultCurrency = ref<TCurrency>(store.getters.defaultCurrency)
+        const iban = ref<string>(store.getters.iban)
 
         watch(activeCurrencies, () => {
             store.dispatch(CurrenciesActionTypes.UPDATE_CURRENCIES, activeCurrencies.value)
@@ -99,11 +101,19 @@ export default defineComponent({
         watch(defaultCurrency, () => {
             store.dispatch(CurrenciesActionTypes.CHANGE_DEFAULT_CURRENCY, defaultCurrency.value)
         })
+        watch(defaultCurrency, () => {
+            store.dispatch(CurrenciesActionTypes.CHANGE_DEFAULT_CURRENCY, defaultCurrency.value)
+        })
+        watch(iban, () => {
+            console.log(iban)
+            store.dispatch(SettingsActionTypes.CHANGE_IBAN, iban.value)
+        })
 
         return {
             availableCurrenciesAsOptions,
             activeCurrencies,
             defaultCurrency,
+            iban,
 
             listOutline,
             qrCodeOutline,

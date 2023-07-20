@@ -33,23 +33,25 @@ export default defineComponent({
     setup(props) {
         const emitter = useEmitter()
         const store = useStore()
-        
+
         const qrString = ref<string>('')
 
         const close = () => {
             emitter.emit('close-qr-payment-modal')
         }
-        
+
         //qrString.value = 'SPD*1.0*ACC:CZ2806000000000168540115*AM:450.00*CC:CZK*MSG:PLATBA ZA ZBOZI*X-VS:1234567890'
 
         onMounted(() => {
             const record = store.getters.records.find(record => record.id === props.recordId)
-            qrString.value = 'SPD*1.0*ACC:CZ2806000000000168540115*AM:' + record?.price + '*CC:'+ record?.currency + '*MSG:' + record?.description + '*X-VS:123'
+            const iban = store.getters.iban
+
+            qrString.value = 'SPD*1.0*ACC:'+ iban +'*AM:' + record?.price + '*CC:'+ record?.currency + '*MSG:' + record?.description + '*X-VS:123'
         })
         return {
             close,
             qrString
-        } 
+        }
     },
 })
 </script>

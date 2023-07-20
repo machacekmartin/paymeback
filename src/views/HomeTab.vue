@@ -16,14 +16,14 @@
                     <record-card
                         class="record"
                         v-for="record in currentRecords" :key="record.id"
-                        :debtorName="debtors.find(debtor => debtor.id === record.debtorId).name"
-                        :price="record.price"
+                        :debtorName="debtors.find(debtor => debtor.id === record.debtorId)?.name || 'unknown'"
+                        :price="record.price || 0"
                         :description="record.description"
                         :currency="record.currency"
                         :datetime="record.datetime"
                         @delete="removeRecord(record.id)"
                         @activate="showQR(record.id)">
-                    </record-card>     
+                    </record-card>
                 </transition-group>
             </div>
         </ion-content>
@@ -41,7 +41,7 @@ import { useStore } from '@/store'
 import { RecordsActionTypes } from '@/store/records/actions'
 import { toast } from '@/helpers/summoners'
 
-import { add, cashOutline, trashOutline } from "ionicons/icons";
+import { add, cashOutline, trashOutline, warning} from "ionicons/icons";
 
 export default defineComponent({
     components: {
@@ -65,6 +65,11 @@ export default defineComponent({
         };
 
         const showQR = (recordId: string): void => {
+            if (store.getters.iban == null) {
+                toast('Please set your IBAN first (in settings)', warning)
+                return
+            }
+
             emitter.emit('open-qr-payment-modal', recordId)
         }
 

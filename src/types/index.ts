@@ -26,3 +26,6 @@ export type TSegment = {
     icon: string
 }
 
+export type TSettings = {
+    iban: string
+}

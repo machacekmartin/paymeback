@@ -57,7 +57,7 @@ import { IonTitle, IonToolbar, IonText, IonButtons, IonButton, IonHeader, IonCon
 
 import SegmentSelector from "@/components/inputs/SegmentSelector.vue";
 import OptionSelector from '@/components/inputs/OptionSelector.vue'
-import DatetimeInput from '@/components/inputs/DatetimeInput.vue'
+import DatetimeInput from '@/components/inputs/DateTimeInput.vue'
 
 import { useStore } from '@/store'
 import { RecordsActionTypes } from "@/store/records/actions";
@@ -91,7 +91,7 @@ export default defineComponent({
     setup() {
         const emitter = useEmitter();
         const store = useStore();
-        
+
         const debtorsAsOptions = computed(() => convertToOptions(store.getters.debtors, 'id', 'name'))
         const currenciesAsOptions: Array<TSelectorOption> = strArrayToOptions(store.getters.currencies)
         const formSegments: Array<TSegment> = [
@@ -100,7 +100,7 @@ export default defineComponent({
                 value: 'existing',
                 icon: listOutline
             },
-            {   
+            {
                 text: 'New person',
                 value: 'new',
                 icon: personOutline
@@ -113,7 +113,7 @@ export default defineComponent({
         const debtorName = ref<string>('')
         const formData = reactive<TRecord>(new Record)
         const errors = ref<Array<string>>([])
-        
+
         const close = (): void => {
             emitter.emit('close-record-form-modal')
             errors.value = []
@@ -144,7 +144,7 @@ export default defineComponent({
             }
             store.dispatch(RecordsActionTypes.ADD_RECORD, { ...formData })
             close()
-            await toast('Successfully added!', checkmarkDoneOutline) 
+            await toast('Successfully added!', checkmarkDoneOutline)
         }
 
         onMounted(() => {
@@ -156,14 +156,14 @@ export default defineComponent({
             currenciesAsOptions,
             debtorsAsOptions,
             formSegments,
-            
+
             activeSegment,
             debtorName,
             formData,
             errors,
             submit,
-            close,         
-            
+            close,
+
             //icons
             listOutline, personOutline, checkmarkOutline, checkmarkDoneOutline, personCircleOutline, chatboxOutline, cashOutline, calendarOutline
         };
